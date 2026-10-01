@@ -23,8 +23,12 @@ def classify(sym):
         lo=round(sc_low*1.01,2)
         st=round(sc_low*0.97,2)
         hi=round(w["high"].tail(30).max(),2)
-        rsn="Climax "+str(sc_age)+"d ago @ "+str(round(sc_low,2))+". If price drops to "+str(round(sc_low,2))+" and closes back above, BUY near "+str(lo)+". Stop "+str(st)+". Target "+str(hi)+"."
-        return {**base, "stage":"A","action":"Wait","entry":lo,"stop":st,"target":hi,"range_low":round(sc_low,2),"range_high":hi,"range_pct":None,"reason":rsn}
+        if hi > lo * 1.5:
+            hi = None
+            rsn="Climax "+str(sc_age)+"d ago @ "+str(round(sc_low,2))+". If price drops to "+str(round(sc_low,2))+" and closes back above, BUY near "+str(lo)+". Stop "+str(st)+". Target not reliable (range too wide)."
+        else:
+            rsn="Climax "+str(sc_age)+"d ago @ "+str(round(sc_low,2))+". If price drops to "+str(round(sc_low,2))+" and closes back above, BUY near "+str(lo)+". Stop "+str(st)+". Target "+str(hi)+"."
+        return {**base, "stage":"A","action":"Wait","entry":lo,"stop":st,"target":hi,"range_low":round(sc_low,2),"range_high":hi if hi else round(w["high"].tail(30).max(),2),"range_pct":None,"reason":rsn}
 
     after=w.iloc[sc_idx+1:].reset_index(drop=True)
     res=float(after["high"].max())
@@ -72,7 +76,7 @@ def classify(sym):
         rsn="Trending >20pct above range. HOLD if held. Sell at target "+str(target)+" or on upthrust/volume spike with no progress."
         return {**base,"stage":"E","action":"HOLD-SELL","entry":None,"stop":round(res,2),"target":target,"reason":rsn}
 
-    if near_hi>=2 and near_lo>=2 and width_pct>=8:
+    if near_hi>=2 and near_lo>=2 and 8<=width_pct<=35:
         lo=round(sup*1.01,2)
         st=round(sup*0.97,2)
         rsn="Range "+str(width_pct)+"pct ("+str(round(sup,2))+" to "+str(round(res,2))+"). Wait for dip to "+str(round(sup,2))+" then recovery -> BUY near "+str(lo)+". Stop "+str(st)+". Target "+str(target)+". Or if breaks up over "+str(round(res,2))+" on volume -> BUY-add."
