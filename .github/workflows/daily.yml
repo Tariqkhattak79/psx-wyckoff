@@ -25,11 +25,20 @@ jobs:
       - name: Quality check
         run: python check_quality.py
 
-      - name: Classify
+      - name: Classify Wyckoff
         run: python classify.py
 
-      - name: Push to Supabase
+      - name: Day trade setups
+        run: python daytrade.py
+
+      - name: Push Wyckoff to Supabase
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python push_signals.py
+
+      - name: Push Daytrade to Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python push_daytrade.py
