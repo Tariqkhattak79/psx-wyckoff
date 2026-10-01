@@ -1,4 +1,4 @@
-import pandas as pd, os, json
+﻿import pandas as pd, os, json
 
 LOOKBACK=60
 MIN_SC_AGE=20
@@ -10,28 +10,35 @@ def classify(sym):
     w=df.tail(LOOKBACK).reset_index(drop=True)
     sc_idx=w["low"].idxmin()
     sc_low=float(w["low"].iloc[sc_idx])
+    sc_date=str(w["date"].iloc[sc_idx])
     sc_age=int(LOOKBACK-1-sc_idx)
     last=w.iloc[-1]
     last_close=float(last["close"])
     prev_close=float(w["close"].iloc[-2]) if len(w)>1 else last_close
     change_pct=round(100.0*(last_close-prev_close)/prev_close, 2) if prev_close else 0
 
+    base=dict(symbol=sym,last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,sc_date=sc_date,sc_age=sc_age,sc_price=round(sc_low,2))
+
     if sc_age < MIN_SC_AGE:
         lo=round(sc_low*1.01,2)
         st=round(sc_low*0.97,2)
         hi=round(w["high"].tail(30).max(),2)
-        rsn="Climax "+str(sc_age)+"d ago. If price drops to "+str(round(sc_low,2))+" (support) and closes back above, BUY near "+str(lo)+". Stop "+str(st)+". Target "+str(hi)+"."
-        return dict(symbol=sym,stage="A",action="Wait",last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,entry=lo,stop=st,target=hi,reason=rsn)
+        rsn="Climax "+str(sc_age)+"d ago @ "+str(round(sc_low,2))+". If price drops to "+str(round(sc_low,2))+" and closes back above, BUY near "+str(lo)+". Stop "+str(st)+". Target "+str(hi)+"."
+        return {**base, "stage":"A","action":"Wait","entry":lo,"stop":st,"target":hi,"range_low":round(sc_low,2),"range_high":hi,"range_pct":None,"reason":rsn}
 
     after=w.iloc[sc_idx+1:].reset_index(drop=True)
     res=float(after["high"].max())
     sup=sc_low
     width=res-sup
-    width_pct=100.0*width/sup
+    width_pct=round(100.0*width/sup, 1)
     near_hi=int((w["high"]>=res*0.98).sum())
     near_lo=int((w["low"]<=sup*1.02).sum())
     avg_vol20=float(w["volume"].tail(20).mean())
     recent=w.tail(SPRING_WINDOW).reset_index(drop=True)
+
+    base["range_low"]=round(sup,2)
+    base["range_high"]=round(res,2)
+    base["range_pct"]=width_pct
 
     spring=None
     for i in range(len(recent)):
@@ -54,24 +61,24 @@ def classify(sym):
     if spring is not None:
         stop=round(spring["low"]*0.98,2)
         rsn=spring["type"]+" spring on "+spring["date"]+". BUY now at "+str(round(spring["close"],2))+". Stop "+str(stop)+". Target "+str(target)+". Lowest-risk entry."
-        return dict(symbol=sym,stage="C",action="BUY",last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,entry=round(spring["close"],2),stop=stop,target=target,reason=rsn)
+        return {**base,"stage":"C","action":"BUY","entry":round(spring["close"],2),"stop":stop,"target":target,"reason":rsn}
 
     if sos is not None and last_close>res:
         stop=round(res*0.98,2)
         rsn="SOS breakout on "+sos["date"]+" (vol "+str(sos["vr"])+"x). BUY-add at "+str(round(last_close,2))+". Stop "+str(stop)+". Target "+str(target)+"."
-        return dict(symbol=sym,stage="D",action="BUY-add",last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,entry=round(last_close,2),stop=stop,target=target,reason=rsn)
+        return {**base,"stage":"D","action":"BUY-add","entry":round(last_close,2),"stop":stop,"target":target,"reason":rsn}
 
     if last_close>res*1.2:
         rsn="Trending >20pct above range. HOLD if held. Sell at target "+str(target)+" or on upthrust/volume spike with no progress."
-        return dict(symbol=sym,stage="E",action="HOLD-SELL",last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,entry=None,stop=round(res,2),target=target,reason=rsn)
+        return {**base,"stage":"E","action":"HOLD-SELL","entry":None,"stop":round(res,2),"target":target,"reason":rsn}
 
     if near_hi>=2 and near_lo>=2 and width_pct>=8:
         lo=round(sup*1.01,2)
         st=round(sup*0.97,2)
-        rsn="Range "+str(round(width_pct,1))+"pct ("+str(round(sup,2))+" to "+str(round(res,2))+"). Wait for dip to "+str(round(sup,2))+" then recovery -> BUY near "+str(lo)+". Stop "+str(st)+". Target "+str(target)+". Or if breaks up over "+str(round(res,2))+" on volume -> BUY-add."
-        return dict(symbol=sym,stage="B",action="Watch",last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,entry=lo,stop=st,target=target,reason=rsn)
+        rsn="Range "+str(width_pct)+"pct ("+str(round(sup,2))+" to "+str(round(res,2))+"). Wait for dip to "+str(round(sup,2))+" then recovery -> BUY near "+str(lo)+". Stop "+str(st)+". Target "+str(target)+". Or if breaks up over "+str(round(res,2))+" on volume -> BUY-add."
+        return {**base,"stage":"B","action":"Watch","entry":lo,"stop":st,"target":target,"reason":rsn}
 
-    return dict(symbol=sym,stage="A",action="Wait",last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,entry=None,stop=None,target=None,reason="No clean range. Monitor for support/resistance.")
+    return {**base,"stage":"A","action":"Wait","entry":None,"stop":None,"target":None,"reason":"No clean range. Monitor for support/resistance."}
 
 files=[f[:-4] for f in os.listdir("data") if f.endswith(".csv")]
 out=[]
@@ -87,4 +94,3 @@ out.sort(key=lambda x: order.get(x["stage"],9))
 json.dump(out, open("signals.json","w"), indent=2)
 for r in out:
     print(r["stage"], r["symbol"], r["action"], "|", r["reason"])
-
