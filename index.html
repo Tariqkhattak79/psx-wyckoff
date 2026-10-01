@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -74,26 +74,26 @@ h1{font-size:20px;margin-bottom:4px}
 <div class="sub" id="date">loading...</div>
 <input type="text" id="search" class="search" placeholder="Search symbol... (e.g. HBL)">
 
-<div class="main-title">Wyckoff</div>
+<div class="main-title">Wyckoff (Swing Trade)</div>
 <div id="wyckoff-sections"></div>
 
-<div class="main-title">Day Setups (Hougaard TFM)</div>
+<div class="main-title">Hougaard TFM (Day Trading)</div>
 <div id="daytrade-sections"></div>
 
 <script>
 const URL_BASE="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/";
 const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
 const WYCKOFF_STAGES=[
-  {k:"A",label:"Wait"},{k:"B",label:"Watch"},{k:"C",label:"BUY"},{k:"D",label:"BUY-add"},{k:"E",label:"SELL 🏆"}
+  {k:"A",label:"Wait"},{k:"B",label:"Watch"},{k:"C",label:"BUY"},{k:"D",label:"BUY-add"},{k:"E",label:"SELL ??"}
 ];
 const DAY_STAGES=[
-  {k:"BULL",label:"🟢 BUY"},{k:"BEAR",label:"🔴 AVOID"}
+  {k:"BULL",label:"?? BUY"},{k:"BEAR",label:"?? AVOID"}
 ];
 let wyckoffData=[], daytradeData=[];
 let openW={A:false,B:false,C:false,D:false,E:false};
 let openD={BULL:false,BEAR:false};
 
-function fmtVal(v){ if(!v) return "—"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
+function fmtVal(v){ if(!v) return "�"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
 
 function wyckoffCard(s){
   let pc="";
@@ -119,7 +119,7 @@ function wyckoffCard(s){
     h+="<div class='levels'>";
     h+="<div class='lvl'><div class='lbl'>Entry</div><div class='val'>"+s.entry+"</div></div>";
     h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
-    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
+    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"�")+"</div></div>";
     h+="</div>";
   }
   h+="<div class='reason'>"+s.reason+"</div></div>";
@@ -129,7 +129,7 @@ function wyckoffCard(s){
 function daytradeCard(s){
   const isBull=s.direction==="bullish";
   const cls=isBull?"bull":"bear";
-  const icon=isBull?"🟢":"🔴";
+  const icon=isBull?"??":"??";
   let h="<div class='card "+cls+"'>";
   h+="<div class='row1'><div><span class='sym'>"+icon+" "+s.symbol+"</span><span class='price'>"+s.last_close+"</span></div><div class='badge "+cls+"'>"+s.pair+"</div></div>";
   if(s.buy_on) h+="<div class='buyon"+(isBull?"":" bear")+"'>"+(isBull?"BUY ON: ":"EXIT BY: ")+s.buy_on+"</div>";
@@ -170,7 +170,7 @@ function renderDaytrade(q){
     const zero=rows.length===0;
     const isOpen=!zero && (openD[st.k] || (q && rows.length>0));
     h+="<div class='group'><div class='sec-btn "+st.k+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleD(\""+st.k+"\")'>";
-    h+="<div class='left'><span class='letter'>"+(st.k==="BULL"?"▲":"▼")+"</span><span class='count'>"+rows.length+"</span></div>";
+    h+="<div class='left'><span class='letter'>"+(st.k==="BULL"?"?":"?")+"</span><span class='count'>"+rows.length+"</span></div>";
     h+="<span class='act'>"+st.label+"</span></div>";
     if(isOpen){ for(const r of rows) h+=daytradeCard(r); }
     h+="</div>";
@@ -205,3 +205,5 @@ load();
 </script>
 </body>
 </html>
+
+
