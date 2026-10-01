@@ -9,13 +9,39 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0f1e;color:#e6edf3;font-family:-apple-system,system-ui,sans-serif;padding:16px;max-width:640px;margin:0 auto}
 h1{font-size:20px;margin-bottom:4px}
-.sub{color:#7d8590;font-size:13px;margin-bottom:16px}
-.card{background:#121a2e;border-radius:10px;padding:14px;margin-bottom:10px;border-left:4px solid #7d8590}
+.sub{color:#7d8590;font-size:13px;margin-bottom:12px}
+.search{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #21262d;background:#121a2e;color:#e6edf3;font-size:14px;margin-bottom:12px}
+.search:focus{outline:none;border-color:#58a6ff}
+.sections{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.sec-btn{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#121a2e;border-radius:8px;border:1px solid #21262d;cursor:pointer;user-select:none;font-weight:600;border-left:5px solid #30363d}
+.sec-btn:active{transform:scale(0.99)}
+.sec-btn .left{display:flex;align-items:center;gap:10px}
+.sec-btn .letter{font-size:18px;font-weight:700;width:24px;text-align:center}
+.sec-btn .count{font-size:13px;color:#8b949e}
+.sec-btn .act{font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700}
+.sec-btn.A{border-left-color:#7d8590}
+.sec-btn.A .letter{color:#7d8590}
+.sec-btn.A .act{color:#7d8590}
+.sec-btn.B{border-left-color:#d29922}
+.sec-btn.B .letter{color:#d29922}
+.sec-btn.B .act{color:#d29922}
+.sec-btn.C{border-left-color:#3fb950}
+.sec-btn.C .letter{color:#3fb950}
+.sec-btn.C .act{color:#3fb950}
+.sec-btn.D{border-left-color:#2ea043}
+.sec-btn.D .letter{color:#2ea043}
+.sec-btn.D .act{color:#2ea043}
+.sec-btn.E{border-left-color:#e3b341}
+.sec-btn.E .letter{color:#e3b341}
+.sec-btn.E .act{color:#e3b341}
+.sec-btn.open{background:#1a2338}
+.sec-btn.zero{opacity:0.5}
+.card{background:#121a2e;border-radius:10px;padding:14px;margin-bottom:8px;border-left:4px solid #7d8590}
 .card.C{border-left-color:#3fb950}
-.card.D{border-left-color:#58a6ff}
+.card.D{border-left-color:#2ea043}
 .card.B{border-left-color:#d29922}
 .card.A{border-left-color:#7d8590}
-.card.E{border-left-color:#f85149}
+.card.E{border-left-color:#e3b341}
 .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .sym{font-size:16px;font-weight:600}
 .price{font-size:14px;font-weight:600;margin-left:8px}
@@ -23,10 +49,10 @@ h1{font-size:20px;margin-bottom:4px}
 .down{color:#f85149}
 .badge{font-size:11px;padding:2px 8px;border-radius:4px;background:#21262d;font-weight:600}
 .badge.C{background:#1a3a1f;color:#3fb950}
-.badge.D{background:#1a2a4a;color:#58a6ff}
+.badge.D{background:#142a1a;color:#2ea043}
 .badge.B{background:#3a2f0f;color:#d29922}
 .badge.A{background:#2a2a2a;color:#7d8590}
-.badge.E{background:#3a1a1a;color:#f85149}
+.badge.E{background:#3a2f0f;color:#e3b341}
 .meta{font-size:11px;color:#8b949e;margin-bottom:6px;line-height:1.5}
 .meta b{color:#c9d1d9}
 .action{font-size:13px;color:#c9d1d9;margin-bottom:8px;font-weight:500}
@@ -36,56 +62,92 @@ h1{font-size:20px;margin-bottom:4px}
 .lvl .val{color:#e6edf3;font-weight:600;font-size:13px}
 .reason{font-size:11px;color:#7d8590;margin-top:8px;font-style:italic;line-height:1.4}
 .empty{text-align:center;padding:40px 20px;color:#7d8590}
+.group{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 </style>
 </head>
 <body>
 <h1>PSX Wyckoff</h1>
 <div class="sub" id="date">loading...</div>
-<div id="list"></div>
+<input type="text" id="search" class="search" placeholder="Search symbol... (e.g. HBL)">
+<div id="sections"></div>
 <script>
 const URL="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/wyckoff_signals";
 const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
+const STAGES=[
+  {k:"A",label:"Wait",icon:""},
+  {k:"B",label:"Watch",icon:""},
+  {k:"C",label:"BUY",icon:""},
+  {k:"D",label:"BUY-add",icon:""},
+  {k:"E",label:"SELL",icon:"🏆"}
+];
+let allData=[];
+let open={A:false,B:false,C:false,D:false,E:false};
+
+function cardHTML(s){
+  let pc="";
+  if(s.change_pct!==null && s.change_pct!==undefined){
+    const cls=s.change_pct>=0?"up":"down";
+    const sign=s.change_pct>=0?"+":"";
+    pc="<span class='price "+cls+"'>"+s.last_close+" ("+sign+s.change_pct+"%)</span>";
+  } else if(s.last_close){
+    pc="<span class='price'>"+s.last_close+"</span>";
+  }
+  let meta="";
+  if(s.sc_date) meta+="<div>SC: <b>"+s.sc_date+"</b> ("+s.sc_age+"d ago) @ <b>"+s.sc_price+"</b></div>";
+  if(s.range_low && s.range_high){
+    const pct=s.range_pct?" ("+s.range_pct+"%)":"";
+    meta+="<div>Range: <b>"+s.range_low+"</b> to <b>"+s.range_high+"</b>"+pct+"</div>";
+  }
+  let h="<div class='card "+s.stage+"'>";
+  h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span>"+pc+"</div><div class='badge "+s.stage+"'>"+s.stage+"</div></div>";
+  if(meta) h+="<div class='meta'>"+meta+"</div>";
+  h+="<div class='action'>"+s.action+"</div>";
+  if(s.entry){
+    h+="<div class='levels'>";
+    h+="<div class='lvl'><div class='lbl'>Entry</div><div class='val'>"+s.entry+"</div></div>";
+    h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
+    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
+    h+="</div>";
+  }
+  h+="<div class='reason'>"+s.reason+"</div>";
+  h+="</div>";
+  return h;
+}
+
+function render(){
+  const query=document.getElementById("search").value.trim().toUpperCase();
+  const c=document.getElementById("sections");
+  let h="";
+  for(const st of STAGES){
+    let rows=allData.filter(x=>x.stage===st.k);
+    if(query) rows=rows.filter(x=>x.symbol.includes(query));
+    const isZero=rows.length===0;
+    const isOpen=!isZero && (open[st.k] || (query && rows.length>0));
+    h+="<div class='group'>";
+    h+="<div class='sec-btn "+st.k+(isOpen?" open":"")+(isZero?" zero":"")+"' onclick='toggle(\""+st.k+"\")'>";
+    h+="<div class='left'><span class='letter'>"+st.k+"</span><span class='count'>"+rows.length+"</span></div>";
+    h+="<span class='act'>"+st.icon+" "+st.label+"</span>";
+    h+="</div>";
+    if(isOpen){
+      for(const r of rows) h+=cardHTML(r);
+    }
+    h+="</div>";
+  }
+  c.innerHTML=h;
+}
+function toggle(k){
+  open[k]=!open[k];
+  render();
+}
 async function load(){
   const r=await fetch(URL+"?select=*",{headers:{apikey:KEY,Authorization:"Bearer "+KEY}});
   const d=await r.json();
   const order={C:0,D:1,B:2,A:3,E:4};
   d.sort((a,b)=>order[a.stage]-order[b.stage]);
-  document.getElementById("date").textContent="Run date: "+(d[0]?d[0].run_date:"no data");
-  const L=document.getElementById("list");
-  if(!d.length){L.innerHTML="<div class='empty'>No signals yet</div>";return}
-  let h="";
-  for(const s of d){
-    let pc="";
-    if(s.change_pct!==null && s.change_pct!==undefined){
-      const cls=s.change_pct>=0?"up":"down";
-      const sign=s.change_pct>=0?"+":"";
-      pc="<span class='price "+cls+"'>"+s.last_close+" ("+sign+s.change_pct+"%)</span>";
-    } else if(s.last_close){
-      pc="<span class='price'>"+s.last_close+"</span>";
-    }
-    let meta="";
-    if(s.sc_date){
-      meta+="<div>SC: <b>"+s.sc_date+"</b> ("+s.sc_age+"d ago) @ <b>"+s.sc_price+"</b></div>";
-    }
-    if(s.range_low && s.range_high){
-      const pct = s.range_pct ? " ("+s.range_pct+"%)" : "";
-      meta+="<div>Range: <b>"+s.range_low+"</b> to <b>"+s.range_high+"</b>"+pct+"</div>";
-    }
-    h+="<div class='card "+s.stage+"'>";
-    h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span>"+pc+"</div><div class='badge "+s.stage+"'>"+s.stage+"</div></div>";
-    if(meta) h+="<div class='meta'>"+meta+"</div>";
-    h+="<div class='action'>"+s.action+"</div>";
-    if(s.entry){
-      h+="<div class='levels'>";
-      h+="<div class='lvl'><div class='lbl'>Entry</div><div class='val'>"+s.entry+"</div></div>";
-      h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
-      h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+s.target+"</div></div>";
-      h+="</div>";
-    }
-    h+="<div class='reason'>"+s.reason+"</div>";
-    h+="</div>";
-  }
-  L.innerHTML=h;
+  allData=d;
+  document.getElementById("date").textContent="Run date: "+(d[0]?d[0].run_date:"no data")+" | Total: "+d.length;
+  render();
+  document.getElementById("search").addEventListener("input",render);
 }
 load();
 </script>
