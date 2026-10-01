@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -93,7 +93,7 @@ let wyckoffData=[], daytradeData=[];
 let openW={A:false,B:false,C:false,D:false,E:false};
 let openD={BULL:false,BEAR:false};
 
-function fmtVal(v){ if(!v) return "—"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
+function fmtVal(v){ if(!v) return "â€”"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
 
 function wyckoffCard(s){
   let pc="";
@@ -119,7 +119,7 @@ function wyckoffCard(s){
     h+="<div class='levels'>";
     h+="<div class='lvl'><div class='lbl'>Entry</div><div class='val'>"+s.entry+"</div></div>";
     h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
-    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
+    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"â€”")+"</div></div>";
     h+="</div>";
   }
   h+="<div class='reason'>"+s.reason+"</div></div>";
@@ -205,5 +205,6 @@ load();
 </script>
 </body>
 </html>
+
 
 
