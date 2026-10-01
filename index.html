@@ -84,10 +84,10 @@ h1{font-size:20px;margin-bottom:4px}
 const URL_BASE="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/";
 const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
 const WYCKOFF_STAGES=[
-  {k:"A",label:"Wait"},{k:"B",label:"Watch"},{k:"C",label:"BUY"},{k:"D",label:"BUY-add"},{k:"E",label:"SELL ??"}
+  {k:"A",label:"Wait"},{k:"B",label:"Watch"},{k:"C",label:"BUY"},{k:"D",label:"BUY-add"},{k:"E",label:"SELL"}
 ];
 const DAY_STAGES=[
-  {k:"BULL",label:"?? BUY"},{k:"BEAR",label:"?? AVOID"}
+  {k:"BULL",label:"BULLISH (BUY)"},{k:"BEAR",label:"BEARISH (AVOID)"}
 ];
 let wyckoffData=[], daytradeData=[];
 let openW={A:false,B:false,C:false,D:false,E:false};
@@ -134,7 +134,7 @@ function daytradeCard(s){
   h+="<div class='row1'><div><span class='sym'>"+icon+" "+s.symbol+"</span><span class='price'>"+s.last_close+"</span></div><div class='badge "+cls+"'>"+s.pair+"</div></div>";
   if(s.buy_on) h+="<div class='buyon"+(isBull?"":" bear")+"'>"+(isBull?"BUY ON: ":"EXIT BY: ")+s.buy_on+"</div>";
   h+="<div class='levels'>";
-  h+="<div class='lvl buy'><div class='lbl'>"+(isBull?"BUY AT":"SELL AT")+"</div><div class='val'>"+s.entry+"</div></div>";
+  h+="<div class='lvl buy'><div class='lbl'>"+(isBull?"BUY AT":"SELLAT")+"</div><div class='val'>"+s.entry+"</div></div>";
   h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
   h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+s.target+"</div></div>";
   h+="</div>";
@@ -170,7 +170,7 @@ function renderDaytrade(q){
     const zero=rows.length===0;
     const isOpen=!zero && (openD[st.k] || (q && rows.length>0));
     h+="<div class='group'><div class='sec-btn "+st.k+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleD(\""+st.k+"\")'>";
-    h+="<div class='left'><span class='letter'>"+(st.k==="BULL"?"?":"?")+"</span><span class='count'>"+rows.length+"</span></div>";
+    h+="<div class='left'><span class='letter'>"+(st.k==="BULL"?"UP":"DN")+"</span><span class='count'>"+rows.length+"</span></div>";
     h+="<span class='act'>"+st.label+"</span></div>";
     if(isOpen){ for(const r of rows) h+=daytradeCard(r); }
     h+="</div>";

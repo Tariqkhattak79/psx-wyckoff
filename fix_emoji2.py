@@ -1,0 +1,7 @@
+﻿t = open("index.html", encoding="utf-8").read()
+t = t.replace("label:\"SELL?\"", "label:\"SELL\"")
+t = t.replace("label:\"?BULLISH (BUY)\"", "label:\"BULLISH (BUY)\"")
+t = t.replace("label:\"?BEARISH (AVOID)\"", "label:\"BEARISH (AVOID)\"")
+t = t.replace('(st.k==="BULL"?"?":"?")', '(st.k==="BULL"?"UP":"DN")')
+open("index.html","w",encoding="utf-8").write(t)
+print("done")

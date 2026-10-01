@@ -1,0 +1,7 @@
+﻿t = open("index.html", encoding="utf-8").read()
+t = t.replace("\U0001F7E2", "[+]")
+t = t.replace("\U0001F534", "[-]")
+t = t.replace("\U0001F3C6", "")
+t = t.replace("SELL ", "SELL")
+open("index.html","w",encoding="utf-8").write(t)
+print("done")
