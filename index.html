@@ -18,6 +18,9 @@ h1{font-size:20px;margin-bottom:4px}
 .card.E{border-left-color:#f85149}
 .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .sym{font-size:16px;font-weight:600}
+.price{font-size:14px;font-weight:600;margin-left:8px}
+.up{color:#3fb950}
+.down{color:#f85149}
 .badge{font-size:11px;padding:2px 8px;border-radius:4px;background:#21262d}
 .badge.C{background:#1a3a1f;color:#3fb950}
 .badge.D{background:#1a2a4a;color:#58a6ff}
@@ -50,8 +53,16 @@ async function load(){
   if(!d.length){L.innerHTML="<div class='empty'>No signals yet</div>";return}
   let h="";
   for(const s of d){
+    let pc="";
+    if(s.change_pct!==null && s.change_pct!==undefined){
+      const cls=s.change_pct>=0?"up":"down";
+      const sign=s.change_pct>=0?"+":"";
+      pc="<span class='price "+cls+"'>"+s.last_close+" ("+sign+s.change_pct+"%)</span>";
+    } else if(s.last_close){
+      pc="<span class='price'>"+s.last_close+"</span>";
+    }
     h+="<div class='card "+s.stage+"'>";
-    h+="<div class='row1'><div class='sym'>"+s.symbol+"</div><div class='badge "+s.stage+"'>"+s.stage+"</div></div>";
+    h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span>"+pc+"</div><div class='badge "+s.stage+"'>"+s.stage+"</div></div>";
     h+="<div class='action'>"+s.action+"</div>";
     if(s.entry){
       h+="<div class='levels'>";
