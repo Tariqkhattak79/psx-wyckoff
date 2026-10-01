@@ -129,7 +129,7 @@ function wyckoffCard(s){
 function daytradeCard(s){
   const isBull=s.direction==="bullish";
   const cls=isBull?"bull":"bear";
-  const icon=isBull?"??":"??";
+  const icon=isBull?"[UP]":"[DN]";
   let h="<div class='card "+cls+"'>";
   h+="<div class='row1'><div><span class='sym'>"+icon+" "+s.symbol+"</span><span class='price'>"+s.last_close+"</span></div><div class='badge "+cls+"'>"+s.pair+"</div></div>";
   if(s.buy_on) h+="<div class='buyon"+(isBull?"":" bear")+"'>"+(isBull?"BUY ON: ":"EXIT BY: ")+s.buy_on+"</div>";
@@ -205,6 +205,7 @@ load();
 </script>
 </body>
 </html>
+
 
 
 
