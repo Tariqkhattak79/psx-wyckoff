@@ -3,10 +3,15 @@
 LOOKBACK=60
 MIN_SC_AGE=20
 SPRING_WINDOW=30
+MIN_AVG_VALUE=5000000
 
 def classify(sym):
     df=pd.read_csv("data/"+sym+".csv").sort_values("date").reset_index(drop=True)
     if len(df)<LOOKBACK: return None
+    _w=df.tail(20)
+    _avgval=float((_w["volume"]*_w["close"]).mean())
+    if _avgval < MIN_AVG_VALUE: return None
+    _avgvol=float(_w["volume"].mean())
     w=df.tail(LOOKBACK).reset_index(drop=True)
     sc_idx=w["low"].idxmin()
     sc_low=float(w["low"].iloc[sc_idx])
@@ -17,7 +22,7 @@ def classify(sym):
     prev_close=float(w["close"].iloc[-2]) if len(w)>1 else last_close
     change_pct=round(100.0*(last_close-prev_close)/prev_close, 2) if prev_close else 0
 
-    base=dict(symbol=sym,last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,sc_date=sc_date,sc_age=sc_age,sc_price=round(sc_low,2))
+    base=dict(symbol=sym,last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,sc_date=sc_date,sc_age=sc_age,sc_price=round(sc_low,2),avg_volume=round(_avgvol),avg_value_pkr=round(_avgval))
 
     if sc_age < MIN_SC_AGE:
         lo=round(sc_low*1.01,2)

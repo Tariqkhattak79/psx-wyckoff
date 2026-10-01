@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0a0f1e">
-<title>PSX Wyckoff</title>
+<title>PSX Signals</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0f1e;color:#e6edf3;font-family:-apple-system,system-ui,sans-serif;padding:16px;max-width:640px;margin:0 auto}
@@ -12,6 +12,7 @@ h1{font-size:20px;margin-bottom:4px}
 .sub{color:#7d8590;font-size:13px;margin-bottom:12px}
 .search{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #21262d;background:#121a2e;color:#e6edf3;font-size:14px;margin-bottom:12px}
 .search:focus{outline:none;border-color:#58a6ff}
+.main-title{font-size:14px;color:#8b949e;margin:14px 0 8px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
 .sections{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
 .sec-btn{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#121a2e;border-radius:8px;border:1px solid #21262d;cursor:pointer;user-select:none;font-weight:600;border-left:5px solid #30363d}
 .sec-btn:active{transform:scale(0.99)}
@@ -19,21 +20,13 @@ h1{font-size:20px;margin-bottom:4px}
 .sec-btn .letter{font-size:18px;font-weight:700;width:24px;text-align:center}
 .sec-btn .count{font-size:13px;color:#8b949e}
 .sec-btn .act{font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700}
-.sec-btn.A{border-left-color:#7d8590}
-.sec-btn.A .letter{color:#7d8590}
-.sec-btn.A .act{color:#7d8590}
-.sec-btn.B{border-left-color:#d29922}
-.sec-btn.B .letter{color:#d29922}
-.sec-btn.B .act{color:#d29922}
-.sec-btn.C{border-left-color:#3fb950}
-.sec-btn.C .letter{color:#3fb950}
-.sec-btn.C .act{color:#3fb950}
-.sec-btn.D{border-left-color:#2ea043}
-.sec-btn.D .letter{color:#2ea043}
-.sec-btn.D .act{color:#2ea043}
-.sec-btn.E{border-left-color:#e3b341}
-.sec-btn.E .letter{color:#e3b341}
-.sec-btn.E .act{color:#e3b341}
+.sec-btn.A{border-left-color:#7d8590}.sec-btn.A .letter,.sec-btn.A .act{color:#7d8590}
+.sec-btn.B{border-left-color:#d29922}.sec-btn.B .letter,.sec-btn.B .act{color:#d29922}
+.sec-btn.C{border-left-color:#3fb950}.sec-btn.C .letter,.sec-btn.C .act{color:#3fb950}
+.sec-btn.D{border-left-color:#2ea043}.sec-btn.D .letter,.sec-btn.D .act{color:#2ea043}
+.sec-btn.E{border-left-color:#e3b341}.sec-btn.E .letter,.sec-btn.E .act{color:#e3b341}
+.sec-btn.BULL{border-left-color:#00d26a}.sec-btn.BULL .letter,.sec-btn.BULL .act{color:#00d26a}
+.sec-btn.BEAR{border-left-color:#f85149}.sec-btn.BEAR .letter,.sec-btn.BEAR .act{color:#f85149}
 .sec-btn.open{background:#1a2338}
 .sec-btn.zero{opacity:0.5}
 .card{background:#121a2e;border-radius:10px;padding:14px;margin-bottom:8px;border-left:4px solid #7d8590}
@@ -42,6 +35,8 @@ h1{font-size:20px;margin-bottom:4px}
 .card.B{border-left-color:#d29922}
 .card.A{border-left-color:#7d8590}
 .card.E{border-left-color:#e3b341}
+.card.bull{border-left-color:#00d26a;background:linear-gradient(90deg,#0d1f14 0%,#121a2e 100%)}
+.card.bear{border-left-color:#f85149;background:linear-gradient(90deg,#1f0d0d 0%,#121a2e 100%)}
 .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .sym{font-size:16px;font-weight:600}
 .price{font-size:14px;font-weight:600;margin-left:8px}
@@ -53,54 +48,72 @@ h1{font-size:20px;margin-bottom:4px}
 .badge.B{background:#3a2f0f;color:#d29922}
 .badge.A{background:#2a2a2a;color:#7d8590}
 .badge.E{background:#3a2f0f;color:#e3b341}
+.badge.bull{background:#0d3a1a;color:#00d26a}
+.badge.bear{background:#3a0d0d;color:#f85149}
 .meta{font-size:11px;color:#8b949e;margin-bottom:6px;line-height:1.5}
 .meta b{color:#c9d1d9}
+.liq{font-size:11px;color:#6e7681;margin-bottom:6px}
 .action{font-size:13px;color:#c9d1d9;margin-bottom:8px;font-weight:500}
+.buyon{font-size:12px;color:#00d26a;font-weight:700;margin-bottom:6px}
+.buyon.bear{color:#f85149}
 .levels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:12px;margin-top:6px}
 .lvl{background:#0a0f1e;padding:6px;border-radius:6px;text-align:center}
 .lvl .lbl{color:#7d8590;font-size:10px;text-transform:uppercase}
 .lvl .val{color:#e6edf3;font-weight:600;font-size:13px}
+.lvl.buy{background:#0d2a1a}
+.lvl.buy .val{color:#00d26a}
+.rr{display:inline-block;padding:3px 8px;border-radius:4px;background:#0d2a1a;color:#00d26a;font-size:11px;font-weight:700;margin-top:6px}
+.rr.bear{background:#2a0d0d;color:#f85149}
 .reason{font-size:11px;color:#7d8590;margin-top:8px;font-style:italic;line-height:1.4}
 .empty{text-align:center;padding:40px 20px;color:#7d8590}
 .group{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 </style>
 </head>
 <body>
-<h1>PSX Wyckoff</h1>
+<h1>PSX Signals</h1>
 <div class="sub" id="date">loading...</div>
 <input type="text" id="search" class="search" placeholder="Search symbol... (e.g. HBL)">
-<div id="sections"></div>
-<script>
-const URL="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/wyckoff_signals";
-const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
-const STAGES=[
-  {k:"A",label:"Wait",icon:""},
-  {k:"B",label:"Watch",icon:""},
-  {k:"C",label:"BUY",icon:""},
-  {k:"D",label:"BUY-add",icon:""},
-  {k:"E",label:"SELL",icon:"🏆"}
-];
-let allData=[];
-let open={A:false,B:false,C:false,D:false,E:false};
 
-function cardHTML(s){
+<div class="main-title">Wyckoff</div>
+<div id="wyckoff-sections"></div>
+
+<div class="main-title">Day Setups (Hougaard TFM)</div>
+<div id="daytrade-sections"></div>
+
+<script>
+const URL_BASE="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/";
+const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
+const WYCKOFF_STAGES=[
+  {k:"A",label:"Wait"},{k:"B",label:"Watch"},{k:"C",label:"BUY"},{k:"D",label:"BUY-add"},{k:"E",label:"SELL 🏆"}
+];
+const DAY_STAGES=[
+  {k:"BULL",label:"🟢 BUY"},{k:"BEAR",label:"🔴 AVOID"}
+];
+let wyckoffData=[], daytradeData=[];
+let openW={A:false,B:false,C:false,D:false,E:false};
+let openD={BULL:false,BEAR:false};
+
+function fmtVal(v){ if(!v) return "—"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
+
+function wyckoffCard(s){
   let pc="";
   if(s.change_pct!==null && s.change_pct!==undefined){
     const cls=s.change_pct>=0?"up":"down";
     const sign=s.change_pct>=0?"+":"";
     pc="<span class='price "+cls+"'>"+s.last_close+" ("+sign+s.change_pct+"%)</span>";
-  } else if(s.last_close){
-    pc="<span class='price'>"+s.last_close+"</span>";
-  }
+  } else if(s.last_close){ pc="<span class='price'>"+s.last_close+"</span>"; }
   let meta="";
   if(s.sc_date) meta+="<div>SC: <b>"+s.sc_date+"</b> ("+s.sc_age+"d ago) @ <b>"+s.sc_price+"</b></div>";
   if(s.range_low && s.range_high){
     const pct=s.range_pct?" ("+s.range_pct+"%)":"";
     meta+="<div>Range: <b>"+s.range_low+"</b> to <b>"+s.range_high+"</b>"+pct+"</div>";
   }
+  let liq="";
+  if(s.avg_volume) liq="Avg vol: "+fmtVal(s.avg_volume)+" sh | PKR "+fmtVal(s.avg_value_pkr)+"/day";
   let h="<div class='card "+s.stage+"'>";
   h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span>"+pc+"</div><div class='badge "+s.stage+"'>"+s.stage+"</div></div>";
   if(meta) h+="<div class='meta'>"+meta+"</div>";
+  if(liq) h+="<div class='liq'>"+liq+"</div>";
   h+="<div class='action'>"+s.action+"</div>";
   if(s.entry){
     h+="<div class='levels'>";
@@ -109,45 +122,84 @@ function cardHTML(s){
     h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
     h+="</div>";
   }
-  h+="<div class='reason'>"+s.reason+"</div>";
-  h+="</div>";
+  h+="<div class='reason'>"+s.reason+"</div></div>";
   return h;
 }
 
-function render(){
-  const query=document.getElementById("search").value.trim().toUpperCase();
-  const c=document.getElementById("sections");
+function daytradeCard(s){
+  const isBull=s.direction==="bullish";
+  const cls=isBull?"bull":"bear";
+  const icon=isBull?"🟢":"🔴";
+  let h="<div class='card "+cls+"'>";
+  h+="<div class='row1'><div><span class='sym'>"+icon+" "+s.symbol+"</span><span class='price'>"+s.last_close+"</span></div><div class='badge "+cls+"'>"+s.pair+"</div></div>";
+  if(s.buy_on) h+="<div class='buyon"+(isBull?"":" bear")+"'>"+(isBull?"BUY ON: ":"EXIT BY: ")+s.buy_on+"</div>";
+  h+="<div class='levels'>";
+  h+="<div class='lvl buy'><div class='lbl'>"+(isBull?"BUY AT":"SELL AT")+"</div><div class='val'>"+s.entry+"</div></div>";
+  h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
+  h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+s.target+"</div></div>";
+  h+="</div>";
+  h+="<div><span class='rr"+(isBull?"":" bear")+"'>R:R "+s.rr+"</span></div>";
+  if(s.avg_value_pkr) h+="<div class='liq'>Avg vol: "+fmtVal(s.avg_volume)+" sh | PKR "+fmtVal(s.avg_value_pkr)+"/day</div>";
+  h+="<div class='reason'>"+s.reason+"</div></div>";
+  return h;
+}
+
+function renderWyckoff(q){
+  const c=document.getElementById("wyckoff-sections");
   let h="";
-  for(const st of STAGES){
-    let rows=allData.filter(x=>x.stage===st.k);
-    if(query) rows=rows.filter(x=>x.symbol.includes(query));
-    const isZero=rows.length===0;
-    const isOpen=!isZero && (open[st.k] || (query && rows.length>0));
-    h+="<div class='group'>";
-    h+="<div class='sec-btn "+st.k+(isOpen?" open":"")+(isZero?" zero":"")+"' onclick='toggle(\""+st.k+"\")'>";
+  for(const st of WYCKOFF_STAGES){
+    let rows=wyckoffData.filter(x=>x.stage===st.k);
+    if(q) rows=rows.filter(x=>x.symbol.includes(q));
+    const zero=rows.length===0;
+    const isOpen=!zero && (openW[st.k] || (q && rows.length>0));
+    h+="<div class='group'><div class='sec-btn "+st.k+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleW(\""+st.k+"\")'>";
     h+="<div class='left'><span class='letter'>"+st.k+"</span><span class='count'>"+rows.length+"</span></div>";
-    h+="<span class='act'>"+st.icon+" "+st.label+"</span>";
-    h+="</div>";
-    if(isOpen){
-      for(const r of rows) h+=cardHTML(r);
-    }
+    h+="<span class='act'>"+st.label+"</span></div>";
+    if(isOpen){ for(const r of rows) h+=wyckoffCard(r); }
     h+="</div>";
   }
   c.innerHTML=h;
 }
-function toggle(k){
-  open[k]=!open[k];
-  render();
+
+function renderDaytrade(q){
+  const c=document.getElementById("daytrade-sections");
+  let h="";
+  for(const st of DAY_STAGES){
+    let rows=daytradeData.filter(x=>st.k==="BULL"?x.direction==="bullish":x.direction==="bearish");
+    if(q) rows=rows.filter(x=>x.symbol.includes(q));
+    const zero=rows.length===0;
+    const isOpen=!zero && (openD[st.k] || (q && rows.length>0));
+    h+="<div class='group'><div class='sec-btn "+st.k+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleD(\""+st.k+"\")'>";
+    h+="<div class='left'><span class='letter'>"+(st.k==="BULL"?"▲":"▼")+"</span><span class='count'>"+rows.length+"</span></div>";
+    h+="<span class='act'>"+st.label+"</span></div>";
+    if(isOpen){ for(const r of rows) h+=daytradeCard(r); }
+    h+="</div>";
+  }
+  c.innerHTML=h;
 }
+
+function toggleW(k){ openW[k]=!openW[k]; renderAll(); }
+function toggleD(k){ openD[k]=!openD[k]; renderAll(); }
+function renderAll(){
+  const q=document.getElementById("search").value.trim().toUpperCase();
+  renderWyckoff(q);
+  renderDaytrade(q);
+}
+
 async function load(){
-  const r=await fetch(URL+"?select=*",{headers:{apikey:KEY,Authorization:"Bearer "+KEY}});
-  const d=await r.json();
+  const h={apikey:KEY,Authorization:"Bearer "+KEY};
+  const [r1,r2]=await Promise.all([
+    fetch(URL_BASE+"wyckoff_signals?select=*",{headers:h}),
+    fetch(URL_BASE+"daytrade_signals?select=*",{headers:h})
+  ]);
+  const d1=await r1.json();
+  const d2=await r2.json();
   const order={C:0,D:1,B:2,A:3,E:4};
-  d.sort((a,b)=>order[a.stage]-order[b.stage]);
-  allData=d;
-  document.getElementById("date").textContent="Run date: "+(d[0]?d[0].run_date:"no data")+" | Total: "+d.length;
-  render();
-  document.getElementById("search").addEventListener("input",render);
+  d1.sort((a,b)=>order[a.stage]-order[b.stage]);
+  wyckoffData=d1; daytradeData=d2;
+  document.getElementById("date").textContent="Run: "+(d1[0]?d1[0].run_date:"no data")+" | Wyckoff: "+d1.length+" | Day: "+d2.length;
+  renderAll();
+  document.getElementById("search").addEventListener("input",renderAll);
 }
 load();
 </script>
