@@ -1,0 +1,35 @@
+﻿name: Daily Wyckoff Run
+
+on:
+  schedule:
+    - cron: "30 12 * * 1-5"
+    - cron: "30 4 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install psxdata pandas requests
+
+      - name: Fetch data
+        run: python fetch_data.py
+
+      - name: Quality check
+        run: python check_quality.py
+
+      - name: Classify
+        run: python classify.py
+
+      - name: Push to Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python push_signals.py
