@@ -27,6 +27,14 @@ def classify(sym):
     if sc_age < MIN_SC_AGE:
         lo=round(sc_low*1.01,2)
         st=round(sc_low*0.97,2)
+        recent_es=w.tail(5).reset_index(drop=True)
+        for i in range(len(recent_es)):
+            r=recent_es.iloc[i]
+            if r["low"]<=sc_low*1.005 and r["close"]>sc_low:
+                st_es=round(float(r["low"])*0.98,2)
+                tgt_es=round(w["high"].tail(30).max(),2)
+                rsn="EARLY spring on "+str(r["date"])+" (low "+str(round(float(r["low"]),2))+" vs SC "+str(round(sc_low,2))+"). BUY near "+str(round(float(r["close"]),2))+". Stop "+str(st_es)+". Target "+str(tgt_es)+"."
+                return {**base,"stage":"C","action":"BUY","entry":round(float(r["close"]),2),"stop":st_es,"target":tgt_es,"range_low":round(sc_low,2),"range_high":round(w["high"].tail(30).max(),2),"range_pct":None,"reason":rsn}
         hi=round(w["high"].tail(30).max(),2)
         if hi > lo * 1.5:
             hi = None
@@ -52,7 +60,7 @@ def classify(sym):
     spring=None
     for i in range(len(recent)):
         r=recent.iloc[i]
-        if r["low"]<sup and r["close"]>sup:
+        if r["low"]<sup*1.005 and r["close"]>sup:
             depth=100.0*(sup-r["low"])/sup
             vr=float(r["volume"])/avg_vol20 if avg_vol20>0 else 0
             t="Shakeout" if depth>5 else ("Type3" if vr<=1.0 else "Type2")

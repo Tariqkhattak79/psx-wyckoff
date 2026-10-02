@@ -1,4 +1,4 @@
-import os, json, requests 
+﻿import os, json, requests 
 from datetime import date 
  
 URL = os.environ["SUPABASE_URL"] + "/rest/v1/wyckoff_signals" 
@@ -7,7 +7,7 @@ HEADERS = {"apikey": KEY, "Authorization": "Bearer " + KEY, "Content-Type": "app
  
 run_date = str(date.today()) 
  
-r = requests.delete(URL + "?run_date=eq." + run_date, headers=HEADERS) 
+r = requests.delete(URL + "?run_date=gte.1970-01-01", headers=HEADERS)
 print("Delete old:", r.status_code) 
  
 rows = json.load(open("signals.json")) 
@@ -19,3 +19,4 @@ if rows:
     print("Insert:", r.status_code, r.text[:200]) 
 else: 
     print("No rows to push") 
+

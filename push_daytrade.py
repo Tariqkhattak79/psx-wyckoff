@@ -7,7 +7,7 @@ HEADERS = {"apikey": KEY, "Authorization": "Bearer " + KEY, "Content-Type": "app
 
 run_date = str(date.today())
 
-r = requests.delete(URL + "?run_date=eq." + run_date, headers=HEADERS)
+r = requests.delete(URL + "?run_date=gte.1970-01-01", headers=HEADERS)
 print("Delete old:", r.status_code)
 
 rows = json.load(open("daytrade.json"))
