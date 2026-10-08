@@ -107,7 +107,8 @@ def classify(sym):
         entry_conservative=round(res,2)
         gap_pct=round(100.0*(last_close-entry_aggressive)/entry_aggressive,2)
         rsn=spring["type"]+" spring on "+spring_date+" ("+status+", "+str(days_since)+"d ago). Aggressive BUY "+str(entry_aggressive)+" / Balanced "+str(entry_balanced)+" / Conservative "+str(entry_conservative)+". Stop "+str(stop)+". Target "+str(target)+". Current "+str(round(last_close,2))+" ("+str(gap_pct)+"% vs agg entry)."
-        return {**base,"stage":"C2","action":"BUY","entry":entry_aggressive,"entry_aggressive":entry_aggressive,"entry_balanced":entry_balanced,"entry_conservative":entry_conservative,"stop":stop,"target":target,"spring_date":spring_date,"spring_low":round(spring["low"],2),"spring_close":round(spring["close"],2),"spring_type":spring["type"],"post_spring_low":round(post_low,2),"status":status,"days_since_spring":days_since,"entry_gap_pct":gap_pct,"reason":rsn}
+        final_stage = "C1" if days_since <= 5 else "C2"
+        return {**base,"stage":final_stage,"action":"BUY","entry":entry_aggressive,"entry_aggressive":entry_aggressive,"entry_balanced":entry_balanced,"entry_conservative":entry_conservative,"stop":stop,"target":target,"spring_date":spring_date,"spring_low":round(spring["low"],2),"spring_close":round(spring["close"],2),"spring_type":spring["type"],"post_spring_low":round(post_low,2),"status":status,"days_since_spring":days_since,"entry_gap_pct":gap_pct,"reason":rsn}
 
     if sos is not None and last_close>res:
         stop=round(res*0.98,2)

@@ -1,7 +1,5 @@
-﻿import os, json, smtplib
+﻿import os, json
 from datetime import date
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 
 try:
     from dotenv import load_dotenv
@@ -9,9 +7,11 @@ try:
 except Exception:
     pass
 
-GMAIL_USER = os.environ.get("GMAIL_USER", "")
-GMAIL_APP_PASS = os.environ.get("GMAIL_APP_PASS", "")
+import resend
+
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY", "")
 EMAIL_TO = os.environ.get("EMAIL_TO", "")
+FROM_ADDR = os.environ.get("FROM_ADDR", "PSX Signals <onboarding@resend.dev>")
 
 def fmt(v):
     if v is None: return "—"
@@ -71,7 +71,7 @@ def c1_table(rows):
     if not rows: return "<p style='color:#8b949e'>No signals.</p>"
     h = "<table cellpadding='6' cellspacing='0' style='border-collapse:collapse;font-family:Arial,sans-serif;font-size:12px;width:100%'>"
     h += "<tr style='background:#161b22;color:#c9d1d9'>"
-    for col in ["Symbol","Price","Entry","Stop","Target","Spring"]:
+    for col in ["Symbol","Price","Entry","Stop","Target","SC Date"]:
         h += f"<th style='border:1px solid #30363d;padding:6px;text-align:left'>{col}</th>"
     h += "</tr>"
     for r in rows:
@@ -152,22 +152,17 @@ def build_email():
     return subj, body
 
 def send():
+    resend.api_key = RESEND_API_KEY
     subj, body = build_email()
     recipients = [e.strip() for e in EMAIL_TO.split(",") if e.strip()]
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = subj
-    msg["From"] = GMAIL_USER
-    msg["To"] = ", ".join(recipients)
-    msg.attach(MIMEText(body, "html"))
-    server = smtplib.SMTP("smtp.gmail.com", 587, timeout=30)
-    server.ehlo()
-    server.starttls()
-    server.ehlo()
-    server.login(GMAIL_USER, GMAIL_APP_PASS)
-    server.sendmail(GMAIL_USER, recipients, msg.as_string())
-    server.quit()
-    print("Sent to:", ", ".join(recipients))
+    params = {
+        "from": FROM_ADDR,
+        "to": recipients,
+        "subject": subj,
+        "html": body,
+    }
+    result = resend.Emails.send(params)
+    print("Sent:", result)
 
 if __name__ == "__main__":
     send()
-
