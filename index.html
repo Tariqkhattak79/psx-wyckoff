@@ -164,9 +164,9 @@ function wyckoffCard(s){
   h+="<div class='action'>"+s.action+"</div>";
   if(s.stage==="C2" && s.entry_aggressive){
     h+="<div class='levels3'>";
-    h+="<div class='lvl full'><div class='lbl'>FULL</div><div class='val'>"+s.entry_aggressive+"</div>"+(s.entry_gap_pct!==undefined?gapSpan(s.entry_gap_pct):"")+"</div>";
-    h+="<div class='lvl half'><div class='lbl'>HALF</div><div class='val'>"+s.entry_balanced+"</div></div>";
-    h+="<div class='lvl quarter'><div class='lbl'>QUARTER</div><div class='val'>"+s.entry_conservative+"</div></div>";
+    h+="<div class='lvl full'><div class='lbl'>FULL</div><div class='val'>"+s.entry_aggressive_lo+" – "+s.entry_aggressive_hi+"</div>"+(s.entry_gap_pct!==undefined?gapSpan(s.entry_gap_pct):"")+"</div>";
+    h+="<div class='lvl half'><div class='lbl'>HALF</div><div class='val'>"+s.entry_balanced_lo+" – "+s.entry_balanced_hi+"</div></div>";
+    h+="<div class='lvl quarter'><div class='lbl'>QUARTER</div><div class='val'>"+s.entry_conservative_lo+" – "+s.entry_conservative_hi+"</div></div>";
     h+="</div>";
     h+="<div class='levels' style='margin-top:6px'>";
     h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";

@@ -2,11 +2,24 @@
 from datetime import datetime
 
 LOOKBACK=60
-MIN_SC_AGE=20
 SPRING_WINDOW=30
-MIN_SPRING_GAP=10
+MIN_SC_AGE=5
+MIN_SPRING_GAP=5
 SPRING_TOL=0.02
 MIN_AVG_VALUE=5000000
+FRESH_DAYS=5
+AGED_DAYS=20
+LATE_PCT=5.0
+CLASSIC_SC_DAYS=10
+CLASSIC_SPRING_GAP=10
+
+def trading_days_between(d1_str, d2_str):
+    try:
+        d1 = datetime.strptime(d1_str, "%Y-%m-%d")
+        d2 = datetime.strptime(d2_str, "%Y-%m-%d")
+        return int((d2 - d1).days)
+    except:
+        return 0
 
 def classify(sym):
     df=pd.read_csv("data/"+sym+".csv").sort_values("date").reset_index(drop=True)
@@ -25,26 +38,18 @@ def classify(sym):
     prev_close=float(w["close"].iloc[-2]) if len(w)>1 else last_close
     change_pct=round(100.0*(last_close-prev_close)/prev_close, 2) if prev_close else 0
 
-    base=dict(symbol=sym,last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,sc_date=sc_date,sc_age=sc_age,sc_price=round(sc_low,2),avg_volume=round(_avgvol),avg_value_pkr=round(_avgval),spring_date=None,spring_low=None,spring_close=None,spring_type=None,post_spring_low=None,status=None,days_since_spring=None,entry_aggressive=None,entry_balanced=None,entry_conservative=None,entry_gap_pct=None)
+    base=dict(symbol=sym,last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,
+        sc_date=sc_date,sc_age=sc_age,sc_price=round(sc_low,2),avg_volume=round(_avgvol),avg_value_pkr=round(_avgval),
+        spring_date=None,spring_low=None,spring_close=None,spring_type=None,post_spring_low=None,status=None,days_since_spring=None,
+        entry_aggressive=None,entry_balanced=None,entry_conservative=None,entry_gap_pct=None,
+        entry_aggressive_lo=None,entry_aggressive_hi=None,entry_balanced_lo=None,entry_balanced_hi=None,entry_conservative_lo=None,entry_conservative_hi=None,
+        range_low=round(sc_low,2),range_high=None,range_pct=None)
 
     if sc_age < MIN_SC_AGE:
-        lo=round(sc_low*1.01,2)
-        st=round(sc_low*0.97,2)
-        recent_es=w.tail(5).reset_index(drop=True)
-        for i in range(len(recent_es)):
-            r=recent_es.iloc[i]
-            if r["low"]<=sc_low*1.005 and r["close"]>sc_low:
-                st_es=round(float(r["low"])*0.98,2)
-                tgt_es=round(w["high"].tail(30).max(),2)
-                rsn="EARLY spring on "+str(r["date"])+" (low "+str(round(float(r["low"]),2))+" vs SC "+str(round(sc_low,2))+"). BUY near "+str(round(float(r["close"]),2))+". Stop "+str(st_es)+". Target "+str(tgt_es)+"."
-                return {**base,"stage":"C1","action":"BUY","entry":round(float(r["close"]),2),"stop":st_es,"target":tgt_es,"range_low":round(sc_low,2),"range_high":round(w["high"].tail(30).max(),2),"range_pct":None,"reason":rsn}
         hi=round(w["high"].tail(30).max(),2)
-        if hi > lo * 1.5:
-            hi = None
-            rsn="Climax "+str(sc_age)+"d ago @ "+str(round(sc_low,2))+". If price drops to "+str(round(sc_low,2))+" and closes back above, BUY near "+str(lo)+". Stop "+str(st)+". Target not reliable (range too wide)."
-        else:
-            rsn="Climax "+str(sc_age)+"d ago @ "+str(round(sc_low,2))+". If price drops to "+str(round(sc_low,2))+" and closes back above, BUY near "+str(lo)+". Stop "+str(st)+". Target "+str(hi)+"."
-        return {**base, "stage":"A","action":"Wait","entry":lo,"stop":st,"target":hi,"range_low":round(sc_low,2),"range_high":hi if hi else round(w["high"].tail(30).max(),2),"range_pct":None,"reason":rsn}
+        base["range_high"]=hi
+        rsn="Climax "+str(sc_age)+"d ago @ "+str(round(sc_low,2))+". Range still forming."
+        return {**base,"stage":"A","action":"Wait","entry":None,"stop":None,"target":None,"reason":rsn}
 
     after=w.iloc[sc_idx+1:].reset_index(drop=True)
     res=float(after["high"].max())
@@ -62,6 +67,7 @@ def classify(sym):
 
     spring=None
     spring_idx=None
+    spring_days_after_sc=0
     for i in range(len(recent)):
         r=recent.iloc[i]
         days_after_sc = (LOOKBACK - SPRING_WINDOW) + i - sc_idx
@@ -70,8 +76,9 @@ def classify(sym):
             depth=100.0*(sup-r["low"])/sup
             vr=float(r["volume"])/avg_vol20 if avg_vol20>0 else 0
             t="Type1" if depth>5 else ("Type2" if vr>1.0 else "Type3")
-            spring=dict(date=str(r["date"]),low=float(r["low"]),close=float(r["close"]),type=t,depth=round(depth,1),vr=round(vr,2))
+            spring=dict(date=str(r["date"]),low=float(r["low"]),close=float(r["close"]),high=float(r["high"]),type=t,depth=round(depth,1),vr=round(vr,2))
             spring_idx=i
+            spring_days_after_sc=days_after_sc
 
     sos=None
     for i in range(len(after)):
@@ -82,15 +89,10 @@ def classify(sym):
 
     target=round(res+width,2)
 
-    if spring is not None:
+    if spring is not None and spring["type"] in ("Type1","Type2"):
         stop=round(spring["low"]*0.98,2)
         spring_date=spring["date"]
-        try:
-            sdt=datetime.strptime(spring_date, "%Y-%m-%d")
-            ldt=datetime.strptime(str(last["date"]), "%Y-%m-%d")
-            days_since=int((ldt-sdt).days)
-        except:
-            days_since=0
+        days_since=trading_days_between(spring_date, str(last["date"]))
         post=recent.iloc[spring_idx+1:]
         if len(post)>0:
             post_low=float(post["low"].min())
@@ -98,17 +100,37 @@ def classify(sym):
             post_low=spring["low"]
         if post_low < spring["low"]*0.995:
             status="FAILED"
-        elif days_since<=3:
+        elif days_since<=FRESH_DAYS:
             status="FRESH"
         else:
             status="VALID"
         entry_aggressive=round(spring["close"],2)
         entry_balanced=round((spring["close"]+sup)/2,2)
         entry_conservative=round(res,2)
+        entry_aggressive_lo=round(spring["low"],2)
+        entry_aggressive_hi=round(spring["high"],2)
+        entry_balanced_lo=round(sup,2)
+        entry_balanced_hi=round(spring["close"],2)
+        entry_conservative_lo=round(res*0.99,2)
+        entry_conservative_hi=round(res*1.01,2)
         gap_pct=round(100.0*(last_close-entry_aggressive)/entry_aggressive,2)
-        rsn=spring["type"]+" spring on "+spring_date+" ("+status+", "+str(days_since)+"d ago). Aggressive BUY "+str(entry_aggressive)+" / Balanced "+str(entry_balanced)+" / Conservative "+str(entry_conservative)+". Stop "+str(stop)+". Target "+str(target)+". Current "+str(round(last_close,2))+" ("+str(gap_pct)+"% vs agg entry)."
-        final_stage = "C1" if days_since <= 5 else "C2"
-        return {**base,"stage":final_stage,"action":"BUY","entry":entry_aggressive,"entry_aggressive":entry_aggressive,"entry_balanced":entry_balanced,"entry_conservative":entry_conservative,"stop":stop,"target":target,"spring_date":spring_date,"spring_low":round(spring["low"],2),"spring_close":round(spring["close"],2),"spring_type":spring["type"],"post_spring_low":round(post_low,2),"status":status,"days_since_spring":days_since,"entry_gap_pct":gap_pct,"reason":rsn}
+        if gap_pct>LATE_PCT:
+            status="LATE"
+        if status=="FAILED" or (days_since>AGED_DAYS and gap_pct>LATE_PCT):
+            return {**base,"stage":"E","action":"EXPIRED","entry":None,"stop":None,"target":None,
+                "spring_date":spring_date,"spring_low":round(spring["low"],2),"spring_close":round(spring["close"],2),"spring_type":spring["type"],
+                "status":status,"days_since_spring":days_since,"entry_gap_pct":gap_pct,
+                "reason":spring["type"]+" spring on "+spring_date+" — "+status+" ("+str(days_since)+"d, "+str(gap_pct)+"% above entry). No longer actionable."}
+        is_classic = (sc_age >= CLASSIC_SC_DAYS and spring_days_after_sc >= CLASSIC_SPRING_GAP and status!="LATE")
+        final_stage = "C2" if is_classic else "C1"
+        rsn=spring["type"]+" spring on "+spring_date+" ("+status+", "+str(days_since)+"d). FULL "+str(entry_aggressive_lo)+"-"+str(entry_aggressive_hi)+" / HALF "+str(entry_balanced_lo)+"-"+str(entry_balanced_hi)+" / QUARTER "+str(entry_conservative_lo)+"-"+str(entry_conservative_hi)+". Stop "+str(stop)+". Target "+str(target)+". Current "+str(round(last_close,2))+" ("+str(gap_pct)+"% vs agg)."
+        return {**base,"stage":final_stage,"action":"BUY","entry":entry_aggressive,
+            "entry_aggressive":entry_aggressive,"entry_balanced":entry_balanced,"entry_conservative":entry_conservative,
+            "entry_aggressive_lo":entry_aggressive_lo,"entry_aggressive_hi":entry_aggressive_hi,
+            "entry_balanced_lo":entry_balanced_lo,"entry_balanced_hi":entry_balanced_hi,
+            "entry_conservative_lo":entry_conservative_lo,"entry_conservative_hi":entry_conservative_hi,
+            "stop":stop,"target":target,"spring_date":spring_date,"spring_low":round(spring["low"],2),"spring_close":round(spring["close"],2),
+            "spring_type":spring["type"],"post_spring_low":round(post_low,2),"status":status,"days_since_spring":days_since,"entry_gap_pct":gap_pct,"reason":rsn}
 
     if sos is not None and last_close>res:
         stop=round(res*0.98,2)
@@ -116,13 +138,13 @@ def classify(sym):
         return {**base,"stage":"D","action":"BUY-add","entry":round(last_close,2),"stop":stop,"target":target,"reason":rsn}
 
     if last_close>res*1.2:
-        rsn="Trending >20pct above range. HOLD if held. Sell at target "+str(target)+" or on upthrust/volume spike with no progress."
+        rsn="Trending >20pct above range. HOLD if held."
         return {**base,"stage":"E","action":"HOLD-SELL","entry":None,"stop":round(res,2),"target":target,"reason":rsn}
 
     if near_hi>=2 and near_lo>=2 and 8<=width_pct<=35:
         lo=round(sup*1.01,2)
         st=round(sup*0.97,2)
-        rsn="Range "+str(width_pct)+"pct ("+str(round(sup,2))+" to "+str(round(res,2))+"). Wait for dip to "+str(round(sup,2))+" then recovery -> BUY near "+str(lo)+". Stop "+str(st)+". Target "+str(target)+". Or if breaks up over "+str(round(res,2))+" on volume -> BUY-add."
+        rsn="Range "+str(width_pct)+"pct ("+str(round(sup,2))+" to "+str(round(res,2))+"). Wait for dip to "+str(round(sup,2))+" then recovery -> BUY near "+str(lo)+". Stop "+str(st)+". Target "+str(target)+"."
         return {**base,"stage":"B","action":"Watch","entry":lo,"stop":st,"target":target,"reason":rsn}
 
     return {**base,"stage":"A","action":"Wait","entry":None,"stop":None,"target":None,"reason":"No clean range. Monitor for support/resistance."}
@@ -141,4 +163,3 @@ out.sort(key=lambda x: order.get(x["stage"],9))
 json.dump(out, open("signals.json","w"), indent=2)
 for r in out:
     print(r["stage"], r["symbol"], r["action"], "|", r["reason"])
-
