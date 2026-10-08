@@ -1,8 +1,11 @@
 ﻿import pandas as pd, os, json
+from datetime import datetime
 
 LOOKBACK=60
 MIN_SC_AGE=20
 SPRING_WINDOW=30
+MIN_SPRING_GAP=10
+SPRING_TOL=0.02
 MIN_AVG_VALUE=5000000
 
 def classify(sym):
@@ -22,7 +25,7 @@ def classify(sym):
     prev_close=float(w["close"].iloc[-2]) if len(w)>1 else last_close
     change_pct=round(100.0*(last_close-prev_close)/prev_close, 2) if prev_close else 0
 
-    base=dict(symbol=sym,last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,sc_date=sc_date,sc_age=sc_age,sc_price=round(sc_low,2),avg_volume=round(_avgvol),avg_value_pkr=round(_avgval))
+    base=dict(symbol=sym,last_close=round(last_close,2),prev_close=round(prev_close,2),change_pct=change_pct,sc_date=sc_date,sc_age=sc_age,sc_price=round(sc_low,2),avg_volume=round(_avgvol),avg_value_pkr=round(_avgval),spring_date=None,spring_low=None,spring_close=None,spring_type=None,post_spring_low=None,status=None,days_since_spring=None,entry_aggressive=None,entry_balanced=None,entry_conservative=None,entry_gap_pct=None)
 
     if sc_age < MIN_SC_AGE:
         lo=round(sc_low*1.01,2)
@@ -58,13 +61,17 @@ def classify(sym):
     base["range_pct"]=width_pct
 
     spring=None
+    spring_idx=None
     for i in range(len(recent)):
         r=recent.iloc[i]
-        if r["low"]<sup*1.005 and r["close"]>sup:
+        days_after_sc = (LOOKBACK - SPRING_WINDOW) + i - sc_idx
+        if days_after_sc < MIN_SPRING_GAP: continue
+        if r["low"]<=sup*(1+SPRING_TOL) and r["close"]>sup:
             depth=100.0*(sup-r["low"])/sup
             vr=float(r["volume"])/avg_vol20 if avg_vol20>0 else 0
             t="Type1" if depth>5 else ("Type2" if vr>1.0 else "Type3")
             spring=dict(date=str(r["date"]),low=float(r["low"]),close=float(r["close"]),type=t,depth=round(depth,1),vr=round(vr,2))
+            spring_idx=i
 
     sos=None
     for i in range(len(after)):
@@ -77,8 +84,30 @@ def classify(sym):
 
     if spring is not None:
         stop=round(spring["low"]*0.98,2)
-        rsn=spring["type"]+" spring on "+spring["date"]+". BUY now at "+str(round(spring["close"],2))+". Stop "+str(stop)+". Target "+str(target)+". Lowest-risk entry."
-        return {**base,"stage":"C2","action":"BUY","entry":round(spring["close"],2),"stop":stop,"target":target,"reason":rsn}
+        spring_date=spring["date"]
+        try:
+            sdt=datetime.strptime(spring_date, "%Y-%m-%d")
+            ldt=datetime.strptime(str(last["date"]), "%Y-%m-%d")
+            days_since=int((ldt-sdt).days)
+        except:
+            days_since=0
+        post=recent.iloc[spring_idx+1:]
+        if len(post)>0:
+            post_low=float(post["low"].min())
+        else:
+            post_low=spring["low"]
+        if post_low < spring["low"]*0.995:
+            status="FAILED"
+        elif days_since<=3:
+            status="FRESH"
+        else:
+            status="VALID"
+        entry_aggressive=round(spring["close"],2)
+        entry_balanced=round((spring["close"]+sup)/2,2)
+        entry_conservative=round(res,2)
+        gap_pct=round(100.0*(last_close-entry_aggressive)/entry_aggressive,2)
+        rsn=spring["type"]+" spring on "+spring_date+" ("+status+", "+str(days_since)+"d ago). Aggressive BUY "+str(entry_aggressive)+" / Balanced "+str(entry_balanced)+" / Conservative "+str(entry_conservative)+". Stop "+str(stop)+". Target "+str(target)+". Current "+str(round(last_close,2))+" ("+str(gap_pct)+"% vs agg entry)."
+        return {**base,"stage":"C2","action":"BUY","entry":entry_aggressive,"entry_aggressive":entry_aggressive,"entry_balanced":entry_balanced,"entry_conservative":entry_conservative,"stop":stop,"target":target,"spring_date":spring_date,"spring_low":round(spring["low"],2),"spring_close":round(spring["close"],2),"spring_type":spring["type"],"post_spring_low":round(post_low,2),"status":status,"days_since_spring":days_since,"entry_gap_pct":gap_pct,"reason":rsn}
 
     if sos is not None and last_close>res:
         stop=round(res*0.98,2)
@@ -111,3 +140,4 @@ out.sort(key=lambda x: order.get(x["stage"],9))
 json.dump(out, open("signals.json","w"), indent=2)
 for r in out:
     print(r["stage"], r["symbol"], r["action"], "|", r["reason"])
+

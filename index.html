@@ -13,7 +13,6 @@ h1{font-size:20px;margin-bottom:4px}
 .search{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #21262d;background:#121a2e;color:#e6edf3;font-size:14px;margin-bottom:12px}
 .search:focus{outline:none;border-color:#58a6ff}
 .main-title{font-size:14px;color:#8b949e;margin:14px 0 8px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
-.sections{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
 .sec-btn{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#121a2e;border-radius:8px;border:1px solid #21262d;cursor:pointer;user-select:none;font-weight:600;border-left:5px solid #30363d}
 .sec-btn:active{transform:scale(0.99)}
 .sec-btn .left{display:flex;align-items:center;gap:10px}
@@ -60,6 +59,11 @@ h1{font-size:20px;margin-bottom:4px}
 .typebadge.t1{background:#d4af37;color:#1a1200}
 .typebadge.t2{background:#c0c0c0;color:#111}
 .typebadge.t3{background:#cd7f32;color:#1a0d00}
+.statusbadge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:1px;margin-top:6px;margin-right:6px}
+.statusbadge.FRESH{background:#3a2f0f;color:#e3b341}
+.statusbadge.VALID{background:#0d3a1f;color:#3fb950}
+.statusbadge.LATE{background:#3a1f0f;color:#f0883e}
+.statusbadge.FAILED{background:#3a0d0d;color:#f85149}
 .meta{font-size:11px;color:#8b949e;margin-bottom:6px;line-height:1.5}
 .meta b{color:#c9d1d9}
 .liq{font-size:11px;color:#6e7681;margin-bottom:6px}
@@ -68,10 +72,21 @@ h1{font-size:20px;margin-bottom:4px}
 .buyon.bear{color:#f85149}
 .levels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:12px;margin-top:6px}
 .lvl{background:#0a0f1e;padding:6px;border-radius:6px;text-align:center}
-.lvl .lbl{color:#7d8590;font-size:10px;text-transform:uppercase}
+.lvl .lbl{color:#7d8590;font-size:10px;text-transform:uppercase;letter-spacing:0.5px}
 .lvl .val{color:#e6edf3;font-weight:600;font-size:13px}
+.lvl .gap{font-size:10px;margin-top:2px;font-weight:600}
 .lvl.buy{background:#0d2a1a}
 .lvl.buy .val{color:#00d26a}
+.lvl.full{background:#0d3a1f;border:1px solid #3fb950}
+.lvl.full .lbl{color:#7ee787}
+.lvl.full .val{color:#3fb950;font-size:15px}
+.lvl.half{background:#3a2f0f;border:1px solid #d29922}
+.lvl.half .lbl{color:#e3b341}
+.lvl.half .val{color:#e3b341;font-size:15px}
+.lvl.quarter{background:#0d1f3a;border:1px solid #58a6ff}
+.lvl.quarter .lbl{color:#79c0ff}
+.lvl.quarter .val{color:#58a6ff;font-size:15px}
+.levels3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px}
 .rr{display:inline-block;padding:3px 8px;border-radius:4px;background:#0d2a1a;color:#00d26a;font-size:11px;font-weight:700;margin-top:6px}
 .rr.bear{background:#2a0d0d;color:#f85149}
 .reason{font-size:11px;color:#7d8590;margin-top:8px;font-style:italic;line-height:1.4}
@@ -113,6 +128,19 @@ function typeClass(reason){
   return "";
 }
 
+function statusBadge(s){
+  if(s.stage!=="C2" || !s.status) return "";
+  const lbl=s.status+(s.days_since_spring!==undefined?" — "+s.days_since_spring+"d":"");
+  return "<div><span class='statusbadge "+s.status+"'>"+lbl+"</span></div>";
+}
+
+function gapSpan(v){
+  if(v===null||v===undefined) return "";
+  const cls = v>=0?"down":"up";
+  const sign = v>=0?"+":"";
+  return "<div class='gap "+cls+"'>"+sign+v+"%</div>";
+}
+
 function wyckoffCard(s){
   let pc="";
   if(s.change_pct!==null && s.change_pct!==undefined){
@@ -134,16 +162,28 @@ function wyckoffCard(s){
   if(meta) h+="<div class='meta'>"+meta+"</div>";
   if(liq) h+="<div class='liq'>"+liq+"</div>";
   h+="<div class='action'>"+s.action+"</div>";
-  if(s.entry){
+  if(s.stage==="C2" && s.entry_aggressive){
+    h+="<div class='levels3'>";
+    h+="<div class='lvl full'><div class='lbl'>FULL</div><div class='val'>"+s.entry_aggressive+"</div>"+(s.entry_gap_pct!==undefined?gapSpan(s.entry_gap_pct):"")+"</div>";
+    h+="<div class='lvl half'><div class='lbl'>HALF</div><div class='val'>"+s.entry_balanced+"</div></div>";
+    h+="<div class='lvl quarter'><div class='lbl'>QUARTER</div><div class='val'>"+s.entry_conservative+"</div></div>";
+    h+="</div>";
+    h+="<div class='levels' style='margin-top:6px'>";
+    h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
+    h+="<div class='lvl'><div class='lbl'>Spring</div><div class='val'>"+s.spring_date+"</div></div>";
+    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
+    h+="</div>";
+  } else if(s.entry){
     h+="<div class='levels'>";
     h+="<div class='lvl'><div class='lbl'>Entry</div><div class='val'>"+s.entry+"</div></div>";
     h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
     h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
     h+="</div>";
   }
+  h+=statusBadge(s);
   if(tc){
     const tp=tc.trim().toUpperCase();
-    h+="<div><span class='typebadge "+tc.trim()+"'>"+tp+"</span></div>";
+    h+="<span class='typebadge "+tc.trim()+"'>"+tp+"</span>";
   }
   h+="<div class='reason'>"+s.reason+"</div></div>";
   return h;
