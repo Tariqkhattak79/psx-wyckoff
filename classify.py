@@ -34,7 +34,7 @@ def classify(sym):
                 st_es=round(float(r["low"])*0.98,2)
                 tgt_es=round(w["high"].tail(30).max(),2)
                 rsn="EARLY spring on "+str(r["date"])+" (low "+str(round(float(r["low"]),2))+" vs SC "+str(round(sc_low,2))+"). BUY near "+str(round(float(r["close"]),2))+". Stop "+str(st_es)+". Target "+str(tgt_es)+"."
-                return {**base,"stage":"C","action":"BUY","entry":round(float(r["close"]),2),"stop":st_es,"target":tgt_es,"range_low":round(sc_low,2),"range_high":round(w["high"].tail(30).max(),2),"range_pct":None,"reason":rsn}
+                return {**base,"stage":"C1","action":"BUY","entry":round(float(r["close"]),2),"stop":st_es,"target":tgt_es,"range_low":round(sc_low,2),"range_high":round(w["high"].tail(30).max(),2),"range_pct":None,"reason":rsn}
         hi=round(w["high"].tail(30).max(),2)
         if hi > lo * 1.5:
             hi = None
@@ -63,7 +63,7 @@ def classify(sym):
         if r["low"]<sup*1.005 and r["close"]>sup:
             depth=100.0*(sup-r["low"])/sup
             vr=float(r["volume"])/avg_vol20 if avg_vol20>0 else 0
-            t="Shakeout" if depth>5 else ("Type3" if vr<=1.0 else "Type2")
+            t="Type1" if depth>5 else ("Type2" if vr>1.0 else "Type3")
             spring=dict(date=str(r["date"]),low=float(r["low"]),close=float(r["close"]),type=t,depth=round(depth,1),vr=round(vr,2))
 
     sos=None
@@ -78,7 +78,7 @@ def classify(sym):
     if spring is not None:
         stop=round(spring["low"]*0.98,2)
         rsn=spring["type"]+" spring on "+spring["date"]+". BUY now at "+str(round(spring["close"],2))+". Stop "+str(stop)+". Target "+str(target)+". Lowest-risk entry."
-        return {**base,"stage":"C","action":"BUY","entry":round(spring["close"],2),"stop":stop,"target":target,"reason":rsn}
+        return {**base,"stage":"C2","action":"BUY","entry":round(spring["close"],2),"stop":stop,"target":target,"reason":rsn}
 
     if sos is not None and last_close>res:
         stop=round(res*0.98,2)
@@ -106,7 +106,7 @@ for s in files:
     except Exception as e:
         print(s,"ERR",e)
 
-order={"C":0,"D":1,"B":2,"A":3,"E":4}
+order={"C2":0,"C1":1,"D":2,"B":3,"A":4,"E":5}
 out.sort(key=lambda x: order.get(x["stage"],9))
 json.dump(out, open("signals.json","w"), indent=2)
 for r in out:

@@ -17,12 +17,13 @@ h1{font-size:20px;margin-bottom:4px}
 .sec-btn{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#121a2e;border-radius:8px;border:1px solid #21262d;cursor:pointer;user-select:none;font-weight:600;border-left:5px solid #30363d}
 .sec-btn:active{transform:scale(0.99)}
 .sec-btn .left{display:flex;align-items:center;gap:10px}
-.sec-btn .letter{font-size:18px;font-weight:700;width:24px;text-align:center}
+.sec-btn .letter{font-size:18px;font-weight:700;width:28px;text-align:center}
 .sec-btn .count{font-size:13px;color:#8b949e}
 .sec-btn .act{font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700}
 .sec-btn.A{border-left-color:#7d8590}.sec-btn.A .letter,.sec-btn.A .act{color:#7d8590}
 .sec-btn.B{border-left-color:#d29922}.sec-btn.B .letter,.sec-btn.B .act{color:#d29922}
-.sec-btn.C{border-left-color:#3fb950}.sec-btn.C .letter,.sec-btn.C .act{color:#3fb950}
+.sec-btn.C1{border-left-color:#7ee787}.sec-btn.C1 .letter,.sec-btn.C1 .act{color:#7ee787}
+.sec-btn.C2{border-left-color:#2ea043}.sec-btn.C2 .letter,.sec-btn.C2 .act{color:#2ea043}
 .sec-btn.D{border-left-color:#2ea043}.sec-btn.D .letter,.sec-btn.D .act{color:#2ea043}
 .sec-btn.E{border-left-color:#e3b341}.sec-btn.E .letter,.sec-btn.E .act{color:#e3b341}
 .sec-btn.BULL{border-left-color:#00d26a}.sec-btn.BULL .letter,.sec-btn.BULL .act{color:#00d26a}
@@ -30,11 +31,15 @@ h1{font-size:20px;margin-bottom:4px}
 .sec-btn.open{background:#1a2338}
 .sec-btn.zero{opacity:0.5}
 .card{background:#121a2e;border-radius:10px;padding:14px;margin-bottom:8px;border-left:4px solid #7d8590}
-.card.C{border-left-color:#3fb950}
+.card.C1{border-left-color:#7ee787}
+.card.C2{border-left-color:#2ea043}
 .card.D{border-left-color:#2ea043}
 .card.B{border-left-color:#d29922}
 .card.A{border-left-color:#7d8590}
 .card.E{border-left-color:#e3b341}
+.card.t1{background:linear-gradient(90deg,#2a1f05 0%,#121a2e 100%);border-left:5px solid #d4af37}
+.card.t2{background:linear-gradient(90deg,#1e2228 0%,#121a2e 100%);border-left:5px solid #c0c0c0}
+.card.t3{background:linear-gradient(90deg,#2a1a10 0%,#121a2e 100%);border-left:5px solid #cd7f32}
 .card.bull{border-left-color:#00d26a;background:linear-gradient(90deg,#0d1f14 0%,#121a2e 100%)}
 .card.bear{border-left-color:#f85149;background:linear-gradient(90deg,#1f0d0d 0%,#121a2e 100%)}
 .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
@@ -43,13 +48,18 @@ h1{font-size:20px;margin-bottom:4px}
 .up{color:#3fb950}
 .down{color:#f85149}
 .badge{font-size:11px;padding:2px 8px;border-radius:4px;background:#21262d;font-weight:600}
-.badge.C{background:#1a3a1f;color:#3fb950}
+.badge.C1{background:#0d3a1f;color:#7ee787}
+.badge.C2{background:#0a2a14;color:#2ea043}
 .badge.D{background:#142a1a;color:#2ea043}
 .badge.B{background:#3a2f0f;color:#d29922}
 .badge.A{background:#2a2a2a;color:#7d8590}
 .badge.E{background:#3a2f0f;color:#e3b341}
 .badge.bull{background:#0d3a1a;color:#00d26a}
 .badge.bear{background:#3a0d0d;color:#f85149}
+.typebadge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;margin-top:6px;margin-right:6px;letter-spacing:0.5px}
+.typebadge.t1{background:#d4af37;color:#1a1200}
+.typebadge.t2{background:#c0c0c0;color:#111}
+.typebadge.t3{background:#cd7f32;color:#1a0d00}
 .meta{font-size:11px;color:#8b949e;margin-bottom:6px;line-height:1.5}
 .meta b{color:#c9d1d9}
 .liq{font-size:11px;color:#6e7681;margin-bottom:6px}
@@ -84,16 +94,24 @@ h1{font-size:20px;margin-bottom:4px}
 const URL_BASE="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/";
 const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
 const WYCKOFF_STAGES=[
-  {k:"A",label:"Wait"},{k:"B",label:"Watch"},{k:"C",label:"BUY"},{k:"D",label:"BUY-add"},{k:"E",label:"SELL"}
+  {k:"C2",label:"STRONG BUY"},{k:"C1",label:"BUY"},{k:"D",label:"BUY-add"},{k:"B",label:"Watch"},{k:"A",label:"Wait"},{k:"E",label:"SELL"}
 ];
 const DAY_STAGES=[
   {k:"BULL",label:"BULLISH (BUY)"},{k:"BEAR",label:"BEARISH (AVOID)"}
 ];
 let wyckoffData=[], daytradeData=[];
-let openW={A:false,B:false,C:false,D:false,E:false};
+let openW={A:false,B:false,C1:false,C2:false,D:false,E:false};
 let openD={BULL:false,BEAR:false};
 
 function fmtVal(v){ if(!v) return "—"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
+
+function typeClass(reason){
+  if(!reason) return "";
+  if(reason.indexOf("Type1")===0) return " t1";
+  if(reason.indexOf("Type2")===0) return " t2";
+  if(reason.indexOf("Type3")===0) return " t3";
+  return "";
+}
 
 function wyckoffCard(s){
   let pc="";
@@ -110,7 +128,8 @@ function wyckoffCard(s){
   }
   let liq="";
   if(s.avg_volume) liq="Avg vol: "+fmtVal(s.avg_volume)+" sh | PKR "+fmtVal(s.avg_value_pkr)+"/day";
-  let h="<div class='card "+s.stage+"'>";
+  const tc=typeClass(s.reason);
+  let h="<div class='card "+s.stage+tc+"'>";
   h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span>"+pc+"</div><div class='badge "+s.stage+"'>"+s.stage+"</div></div>";
   if(meta) h+="<div class='meta'>"+meta+"</div>";
   if(liq) h+="<div class='liq'>"+liq+"</div>";
@@ -121,6 +140,10 @@ function wyckoffCard(s){
     h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
     h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
     h+="</div>";
+  }
+  if(tc){
+    const tp=tc.trim().toUpperCase();
+    h+="<div><span class='typebadge "+tc.trim()+"'>"+tp+"</span></div>";
   }
   h+="<div class='reason'>"+s.reason+"</div></div>";
   return h;
@@ -194,7 +217,7 @@ async function load(){
   ]);
   const d1=await r1.json();
   const d2=await r2.json();
-  const order={C:0,D:1,B:2,A:3,E:4};
+  const order={C2:0,C1:1,D:2,B:3,A:4,E:5};
   d1.sort((a,b)=>order[a.stage]-order[b.stage]);
   wyckoffData=d1; daytradeData=d2;
   document.getElementById("date").textContent="Run: "+(d1[0]?d1[0].run_date:"no data")+" | Wyckoff: "+d1.length+" | Day: "+d2.length;
@@ -205,7 +228,3 @@ load();
 </script>
 </body>
 </html>
-
-
-
-
