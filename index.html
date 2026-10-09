@@ -90,7 +90,7 @@ h1{font-size:20px;margin-bottom:4px}
 .rr{display:inline-block;padding:3px 8px;border-radius:4px;background:#0d2a1a;color:#00d26a;font-size:11px;font-weight:700;margin-top:6px}
 .rr.bear{background:#2a0d0d;color:#f85149}
 .reason{font-size:11px;color:#7d8590;margin-top:8px;font-style:italic;line-height:1.4}
-.empty{text-align:center;padding:40px 20px;color:#7d8590}
+.qbadge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;margin-top:6px;margin-right:6px;letter-spacing:0.5px}.qbadge.qy{background:#0d3a1f;color:#3fb950;border:1px solid #2ea043}.qbadge.qn{background:#3a0d0d;color:#f85149;border:1px solid #da3633}.empty{text-align:center;padding:40px 20px;color:#7d8590}
 .group{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 </style>
 </head>
@@ -128,6 +128,12 @@ function typeClass(reason){
   return "";
 }
 
+function trendBadge(s){
+  if(s.stage!=="C1" && s.stage!=="C2") return "";
+  var t = s.trend_ok ? "<span class='qbadge qy'>TREND OK</span>" : "<span class='qbadge qn'>TREND DOWN</span>";
+  var te = s.test_ok===true ? "<span class='qbadge qy'>TEST OK</span>" : (s.test_ok===false ? "<span class='qbadge qn'>NO TEST</span>" : "");
+  return "<div>"+t+te+"</div>";
+}
 function statusBadge(s){
   if(s.stage!=="C2" || !s.status) return "";
   const lbl=s.status+(s.days_since_spring!==undefined?" — "+s.days_since_spring+"d":"");
@@ -180,7 +186,7 @@ function wyckoffCard(s){
     h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
     h+="</div>";
   }
-  h+=statusBadge(s);
+  h+=statusBadge(s); h+=trendBadge(s);
   if(tc){
     const tp=tc.trim().toUpperCase();
     h+="<span class='typebadge "+tc.trim()+"'>"+tp+"</span>";
