@@ -83,7 +83,12 @@ def analyze(sym):
         gap_pct = abs(d1_open - d2_l) / d2_l if d2_l else 0
         gap_ok = gap_pct <= GAP_TOL
         passes = sum([trend_ok, vol_ok, gap_ok])
-        quality = "A" if passes == 3 else ("B" if passes == 2 else "C")
+        if passes == 3:
+            quality = "A"
+        elif trend_ok and passes >= 2:
+            quality = "B"
+        else:
+            quality = "C"
         if rr < MIN_RR: return None
         rsn = "Bullish "+pair+". "+quality+"-grade. Entry "+str(round(entry,2))+" (D1 low). Stop "+str(stop)+" (ATR). Target "+str(round(target,2))+" (D2 high). RR "+str(rr)+". "+\
             ("Trend OK. " if trend_ok else "Trend down. ")+("Vol quiet. " if vol_ok else "Vol high. ")+("Gap OK." if gap_ok else "Gap wide.")
@@ -107,7 +112,12 @@ def analyze(sym):
     gap_pct = abs(d1_open - d2_l) / d2_l if d2_l else 0
     gap_ok = gap_pct <= GAP_TOL
     passes = sum([trend_ok, vol_ok, gap_ok])
-    quality = "A" if passes == 3 else ("B" if passes == 2 else "C")
+    if passes == 3:
+        quality = "A"
+    elif trend_ok and passes >= 2:
+        quality = "B"
+    else:
+        quality = "C"
     if rr < MIN_RR: return None
     rsn = "Bearish "+pair+". "+quality+"-grade. Breakdown "+str(round(entry,2))+". Stop "+str(stop)+" (ATR). Target "+str(target)+". RR "+str(rr)+". "+\
         ("Trend OK. " if trend_ok else "Trend up. ")+("Vol quiet. " if vol_ok else "Vol high. ")+("Gap OK." if gap_ok else "Gap wide.")
