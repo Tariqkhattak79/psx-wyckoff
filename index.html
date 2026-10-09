@@ -90,7 +90,14 @@ h1{font-size:20px;margin-bottom:4px}
 .rr{display:inline-block;padding:3px 8px;border-radius:4px;background:#0d2a1a;color:#00d26a;font-size:11px;font-weight:700;margin-top:6px}
 .rr.bear{background:#2a0d0d;color:#f85149}
 .reason{font-size:11px;color:#7d8590;margin-top:8px;font-style:italic;line-height:1.4}
-.qbadge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;margin-top:6px;margin-right:6px;letter-spacing:0.5px}.qbadge.qy{background:#0d3a1f;color:#3fb950;border:1px solid #2ea043}.qbadge.qn{background:#3a0d0d;color:#f85149;border:1px solid #da3633}.empty{text-align:center;padding:40px 20px;color:#7d8590}
+.qbadge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;margin-top:6px;margin-right:6px;letter-spacing:0.5px}.qbadge.qy{background:#0d3a1f;color:#3fb950;border:1px solid #2ea043}.qbadge.qn{background:#3a0d0d;color:#f85149;border:1px solid #da3633}.qa,.qb,.qc{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:800;margin-top:6px;margin-right:6px;letter-spacing:1px}
+.qa.qbull{background:#0d3a1f;color:#3fb950;border:1px solid #3fb950}
+.qa.qbear{background:#3a0d0d;color:#f85149;border:1px solid #f85149}
+.qb.qbull{background:#0d2a1a;color:#2ea043;border:1px solid #2ea043}
+.qb.qbear{background:#2a0d0d;color:#da3633;border:1px solid #da3633}
+.qc.qbull{background:#0d1f14;color:#7d8590;border:1px solid #30363d}
+.qc.qbear{background:#1f0d0d;color:#7d8590;border:1px solid #30363d}
+.empty{text-align:center;padding:40px 20px;color:#7d8590}
 .group{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 </style>
 </head>
@@ -202,6 +209,11 @@ function daytradeCard(s){
   let h="<div class='card "+cls+"'>";
   h+="<div class='row1'><div><span class='sym'>"+icon+" "+s.symbol+"</span><span class='price'>"+s.last_close+"</span></div><div class='badge "+cls+"'>"+s.pair+"</div></div>";
   if(s.buy_on) h+="<div class='buyon"+(isBull?"":" bear")+"'>"+(isBull?"BUY ON: ":"EXIT BY: ")+s.buy_on+"</div>";
+  if(s.quality){
+    var qcls = s.quality==="A"?"qa":(s.quality==="B"?"qb":"qc");
+    var qdir = isBull?"qbull":"qbear";
+    h+="<div><span class='"+(qcls+" "+qdir)+"'>GRADE "+s.quality+"</span></div>";
+  }
   h+="<div class='levels'>";
   h+="<div class='lvl buy'><div class='lbl'>"+(isBull?"BUY AT":"SELLAT")+"</div><div class='val'>"+s.entry+"</div></div>";
   h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
