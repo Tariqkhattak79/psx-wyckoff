@@ -1,40 +1,87 @@
-name: 3PM Live Exhaustion Scan
+from tvdatafeed import TvDatafeed, Interval
+import pandas as pd
+import datetime
+import time
+import json
+import os
 
-on:
-  schedule:
-    - cron: '0 10 * * 1-5' # Runs at 10:00 UTC = 3:00 PM PKT
-  workflow_dispatch: # Lets you test it manually
+# --- 1. LOGIN USING GITHUB SECRETS ---
+tv_user = os.getenv("TV_USERNAME")
+tv_pass = os.getenv("TV_PASSWORD")
 
-jobs:
-  live-scan:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write # REQUIRED: Allows the script to save the JSON back to GitHub
-      
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-          
-      - name: Install dependencies
-        run: |
-          pip install pandas git+https://github.com/rongardF/tvdatafeed.git
-          
-      - name: Run 3PM Live Script
-        env:
-          TV_USERNAME: ${{ secrets.TV_USERNAME }}
-          TV_PASSWORD: ${{ secrets.TV_PASSWORD }}
-        run: python live_3pm_scan.py
-        
-      # NEW STEP: Save the results back to GitHub
-      - name: Commit and Push updated JSON
-        run: |
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
-          git add live_scan.json
-          git commit -m "Updated live scan results [skip ci]" || echo "No changes to commit"
-          git push
+if tv_user and tv_pass:
+    tv = TvDatafeed(tv_user, tv_pass)
+    print("Attempting login with username/password...")
+else:
+    tv = TvDatafeed()
+    print("WARNING: No credentials found. Using guest login.")
+
+SYMBOLS = ['LUCK', 'SHEZ', 'LOTCHEM', 'SPWL', 'SITC', 'PREMA', 'APL', 'NRL', 'TRG', 'ADMM', 'POL', 'NETSOL', 'NATF', 'NCL', 'SPSL', 'FATIMA', 'WAHDAT', 'ASTL', 'AICL', 'GDL', 'ASC', 'AHL', 'DOL', 'COLG', 'STL', 'BAFL', 'PIBTL', 'FFL', 'IMAGE', 'NCPL', 'SYS', 'FCCL', 'ATRL', 'BECO', 'PAKQAT', 'HUMNL', 'FECTC', 'PNSC', 'NPL', 'AGTL', 'IREIT', 'PIAHCLA', 'MLCF', 'TSBL', 'IBLHL', 'AKBL', 'BIPL', 'ATLH', 'ACPL', 'FLYNG', 'POWER', 'GWLC', 'KEL', 'GCIL', 'GGGL', 'BFAGRO', 'SHFA', 'MCB', 'MEBL', 'DCR', 'TPLT', 'ICIBL', 'TREET', 'HASCOL', 'ILP', 'ITTEFAQ', 'IGIHL', 'BIFO', 'ISL', 'CSAP', 'HIRAT', 'BNL', 'GLAXO', 'HALEON', 'FCL', 'TBL', 'CLOV', 'SYM', 'LCI', 'PTC', 'TOWL', 'SGF', 'BWHL', 'AGHA', 'OTSU', 'HINOON', 'ABOT', 'JVDC', 'EPCL', 'WAFI', 'BBFL', 'BGL', 'SBL', 'MTL', 'DGKC', 'HBL', 'ASL', 'SSGC', 'BERG', 'GHNI', 'GAL', 'DFML', 'AIRLINK', 'GGL', 'AGL', 'THCCL', 'GHGL', 'MERIT', 'PPP', 'MARI', 'ENGROH', 'SNGP', 'FFC', 'HUBC', 'SAZEW', 'UBL', 'BOP', 'TOMCL', 'NBP', 'LOADS', 'PAEL', 'WAVESAPP', 'CNERGY', 'KOHC', 'MUGHAL', 'SEARL', 'BFBIO', 'GCWL', 'HTL', 'NML', 'PRL', 'CPHL', 'WAVES', 'BWCL', 'GATI', 'SLGL', 'PAKRI', 'ORM', 'HCAR', 'ABL', 'FABL', 'DCL', 'UNITY', 'SPEL']
+
+def run_scan():
+    results = []
+    print(f"Starting Live Scan of {len(SYMBOLS)} symbols...")
+    
+    for i, sym in enumerate(SYMBOLS):
+        try:
+            daily = tv.get_hist(symbol=sym, exchange='PSX', interval=Interval.in_daily, n_bars=15)
+            intraday = tv.get_hist(symbol=sym, exchange='PSX', interval=Interval.in_1_minute, n_bars=500)
+            
+            if daily is None or intraday is None or daily.empty or intraday.empty:
+                continue
+                
+            if len(daily) < 6:
+                continue
+
+            today_str = datetime.datetime.now().strftime('%Y-%m-%d')
+            today_data = intraday[intraday.index.strftime('%Y-%m-%d') == today_str]
+            if today_data.empty:
+                continue 
+
+            live_open = today_data['open'].iloc[0]
+            live_close = today_data['close'].iloc[-1]
+            live_volume = today_data['volume'].sum()
+
+            yesterday = daily.iloc[-2] 
+            prev_open = yesterday['open']
+            prev_close = yesterday['close']
+            prev_vol = yesterday['volume']
+            prev_low = yesterday['low']
+            
+            prev_is_red = prev_close < prev_open
+            is_green = live_close > live_open
+            low_vol = live_volume < prev_vol
+            
+            last_5_days = daily.iloc[-6:-1] 
+            red_days_count = sum(last_5_days['close'] < last_5_days['open'])
+            continuous_drop = red_days_count >= 3
+
+            if prev_is_red and is_green and low_vol and continuous_drop:
+                entry = round(live_close, 2)
+                stop = round(prev_low * 0.99, 2)
+                risk = entry - stop
+                target = round(entry + (risk * 2), 2)
+                
+                results.append({
+                    "symbol": sym,
+                    "entry": entry,
+                    "stop": stop,
+                    "target": target,
+                    "today_vol": int(live_volume),
+                    "prev_vol": int(prev_vol),
+                    "red_days": red_days_count
+                })
+                print(f"\nSIGNAL FOUND: {sym}")
+
+        except Exception as e:
+            pass 
+            
+        time.sleep(1.5) 
+        print(f"Scanning {i+1}/{len(SYMBOLS)}...", end="\r")
+
+    with open("live_scan.json", "w") as f:
+        json.dump(results, f, indent=4)
+    print(f"\nScan Complete. Found {len(results)} signals. Saved to live_scan.json")
+
+if __name__ == "__main__":
+    run_scan()
