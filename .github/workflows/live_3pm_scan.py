@@ -4,7 +4,7 @@ import json
 
 # --- CONFIGURATION ---
 DATA_FOLDER = "data"
-MIN_DROP_PCT = 8.0  # Must drop at least 8% from recent high
+MIN_DROP_PCT = 8.0  
 LOOKBACK_DAYS = 30  
 
 def run_scan():
@@ -38,9 +38,17 @@ def run_scan():
             
             # 2. Macro Downtrend Logic
             lookback_window = df.tail(LOOKBACK_DAYS)
-            recent_high = lookback_window['high'].max()
+            
+            # Find the index of the highest high in the lookback window
+            high_idx = lookback_window['high'].idxmax()
+            recent_high = df.loc[high_idx, 'high']
+            
+            # Calculate Drop %
             drop_pct = ((recent_high - yesterday['low']) / recent_high) * 100
             is_downtrend = drop_pct >= MIN_DROP_PCT
+            
+            # Calculate how many days ago the high was
+            days_since_high = len(df) - 1 - high_idx
 
             if prev_is_red and is_green and low_vol and is_downtrend:
                 entry = round(today['close'], 2)
@@ -54,9 +62,10 @@ def run_scan():
                     "target": target,
                     "today_vol": int(today['volume']),
                     "prev_vol": int(yesterday['volume']),
-                    "drop_pct": round(drop_pct, 1) # <--- EXACT DROP PERCENTAGE
+                    "drop_pct": round(drop_pct, 1),
+                    "drop_days": int(days_since_high) # <--- NEW: EXACT DAYS
                 })
-                print(f"SIGNAL FOUND: {sym} (Dropped {drop_pct:.1f}%)")
+                print(f"SIGNAL FOUND: {sym} (Dropped {drop_pct:.1f}% over {days_since_high} days)")
 
         except Exception as e:
             pass 
