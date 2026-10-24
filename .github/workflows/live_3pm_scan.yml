@@ -1,15 +1,16 @@
-name: 3PM Live Exhaustion Scan
+name: 3PM PSX Exhaustion Scan
 
 on:
   schedule:
-    - cron: '0 10 * * 1-5' # Runs at 10:00 UTC = 3:00 PM Pakistan Time
-  workflow_dispatch: # Creates the manual "Run workflow" button
+    # 10:00 AM UTC is exactly 3:00 PM Pakistan Time
+    - cron: '0 10 * * 1-5' 
+  workflow_dispatch: 
 
 jobs:
   live-scan:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Allows the action to save the JSON file back to GitHub
+      contents: write 
       
     steps:
       - name: Checkout code
@@ -24,7 +25,7 @@ jobs:
         run: |
           pip install pandas psxdata
           
-      - name: Run 3PM Live Script
+      - name: Run PSX Script
         run: python live_3pm_scan.py
         
       - name: Commit and Push updated JSON
