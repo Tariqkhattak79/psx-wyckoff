@@ -11,7 +11,6 @@ def run_scan():
     if not os.path.exists(DATA_FOLDER):
         return
     files = [f for f in os.listdir(DATA_FOLDER) if f.endswith('.csv')]
-    print(f"Starting Scan of {len(files)} symbols...")
     
     for i, filename in enumerate(files):
         sym = filename.replace(".csv", "")
@@ -19,10 +18,10 @@ def run_scan():
         try:
             df = pd.read_csv(path)
             df = df.sort_values("date").reset_index(drop=True)
-            if len(df) < 6:
-                continue
+            if len(df) < 6: continue
             today = df.iloc[-1]
             yesterday = df.iloc[-2]
+            
             prev_is_red = yesterday['close'] < yesterday['open']
             is_green = today['close'] > today['open']
             low_vol = today['volume'] < yesterday['volume']
@@ -48,16 +47,11 @@ def run_scan():
                     "drop_pct": round(drop_pct, 1),
                     "drop_days": int(days_since_high)
                 })
-                print(f"SIGNAL FOUND: {sym}")
-        except Exception:
-            pass 
-        print(f"Scanning {i+1}/{len(files)}...", end="\r")
+        except Exception: pass
 
-    if os.path.exists("live_scan.json"):
-        os.remove("live_scan.json")
     with open("live_scan.json", "w") as f:
         json.dump(results, f, indent=4)
-    print(f"\nScan Complete. Found {len(results)} signals.")
+    print(f"Found {len(results)} signals.")
 
 if __name__ == "__main__":
     run_scan()

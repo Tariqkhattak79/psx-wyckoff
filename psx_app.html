@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -137,7 +137,7 @@ let openW={A:false,B:false,C1:false,C2:false,D:false,E:false};
 let openD={BULL:false,BEAR:false};
 let openE={EXH:false}; // State for new tab
 
-function fmtVal(v){ if(!v) return "—"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
+function fmtVal(v){ if(!v) return "â€”"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
 
 function typeClass(reason){
   if(!reason) return "";
@@ -155,7 +155,7 @@ function trendBadge(s){
 }
 function statusBadge(s){
   if(s.stage!=="C2" || !s.status) return "";
-  const lbl=s.status+(s.days_since_spring!==undefined?" — "+s.days_since_spring+"d":"");
+  const lbl=s.status+(s.days_since_spring!==undefined?" â€” "+s.days_since_spring+"d":"");
   return "<div><span class='statusbadge "+s.status+"'>"+lbl+"</span></div>";
 }
 
@@ -189,20 +189,20 @@ function wyckoffCard(s){
   h+="<div class='action'>"+s.action+"</div>";
   if(s.stage==="C2" && s.entry_aggressive){
     h+="<div class='levels3'>";
-    h+="<div class='lvl full'><div class='lbl'>FULL</div><div class='val'>"+s.entry_aggressive_lo+" – "+s.entry_aggressive_hi+"</div>"+(s.entry_gap_pct!==undefined?gapSpan(s.entry_gap_pct):"")+"</div>";
-    h+="<div class='lvl half'><div class='lbl'>HALF</div><div class='val'>"+s.entry_balanced_lo+" – "+s.entry_balanced_hi+"</div></div>";
-    h+="<div class='lvl quarter'><div class='lbl'>QUARTER</div><div class='val'>"+s.entry_conservative_lo+" – "+s.entry_conservative_hi+"</div></div>";
+    h+="<div class='lvl full'><div class='lbl'>FULL</div><div class='val'>"+s.entry_aggressive_lo+" â€“ "+s.entry_aggressive_hi+"</div>"+(s.entry_gap_pct!==undefined?gapSpan(s.entry_gap_pct):"")+"</div>";
+    h+="<div class='lvl half'><div class='lbl'>HALF</div><div class='val'>"+s.entry_balanced_lo+" â€“ "+s.entry_balanced_hi+"</div></div>";
+    h+="<div class='lvl quarter'><div class='lbl'>QUARTER</div><div class='val'>"+s.entry_conservative_lo+" â€“ "+s.entry_conservative_hi+"</div></div>";
     h+="</div>";
     h+="<div class='levels' style='margin-top:6px'>";
     h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
     h+="<div class='lvl'><div class='lbl'>Spring</div><div class='val'>"+s.spring_date+"</div></div>";
-    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
+    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"â€”")+"</div></div>";
     h+="</div>";
   } else if(s.entry){
     h+="<div class='levels'>";
     h+="<div class='lvl'><div class='lbl'>Entry</div><div class='val'>"+s.entry+"</div></div>";
     h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
-    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
+    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"â€”")+"</div></div>";
     h+="</div>";
   }
   h+=statusBadge(s); h+=trendBadge(s);
@@ -374,3 +374,4 @@ load();
 </script>
 </body>
 </html>
+
