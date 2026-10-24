@@ -1,4 +1,4 @@
-﻿name: Daily Wyckoff Run
+name: Daily Wyckoff Run
 
 on:
   schedule:
@@ -8,6 +8,8 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -47,3 +49,6 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: python send_email.py
+      
+      - name: Run Exhaustion Scanner
+        run: python live_3pm_scan.py
