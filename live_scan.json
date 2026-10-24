@@ -1,0 +1,47 @@
+[
+    {
+        "symbol": "BIFO",
+        "entry": 104.14,
+        "stop": 102.07,
+        "target": 108.28,
+        "today_vol": 14936,
+        "prev_vol": 15408,
+        "red_days": 5
+    },
+    {
+        "symbol": "BNL",
+        "entry": 5.13,
+        "stop": 5.02,
+        "target": 5.35,
+        "today_vol": 869800,
+        "prev_vol": 1974011,
+        "red_days": 5
+    },
+    {
+        "symbol": "BNWM",
+        "entry": 60.82,
+        "stop": 59.55,
+        "target": 63.36,
+        "today_vol": 3744,
+        "prev_vol": 5269,
+        "red_days": 4
+    },
+    {
+        "symbol": "MUREB",
+        "entry": 925.45,
+        "stop": 892.24,
+        "target": 991.87,
+        "today_vol": 490,
+        "prev_vol": 717,
+        "red_days": 5
+    },
+    {
+        "symbol": "TOMCL",
+        "entry": 28.72,
+        "stop": 27.97,
+        "target": 30.22,
+        "today_vol": 649875,
+        "prev_vol": 1687310,
+        "red_days": 4
+    }
+]
