@@ -1,13 +1,23 @@
 [
     {
+        "symbol": "ACPL",
+        "entry": 239.39,
+        "stop": 234.63,
+        "target": 248.91,
+        "today_vol": 18211,
+        "prev_vol": 18672,
+        "drop_pct": 4.6,
+        "drop_days": 6
+    },
+    {
         "symbol": "BIFO",
         "entry": 104.14,
         "stop": 101.08,
         "target": 110.26,
         "today_vol": 14936,
         "prev_vol": 26656,
-        "drop_pct": 24.7,
-        "drop_days": 44
+        "drop_pct": 25.8,
+        "drop_days": 45
     },
     {
         "symbol": "BNL",
@@ -36,8 +46,8 @@
         "target": 43.89,
         "today_vol": 26614,
         "prev_vol": 31849,
-        "drop_pct": 20.4,
-        "drop_days": 41
+        "drop_pct": 25.6,
+        "drop_days": 57
     },
     {
         "symbol": "MUREB",
@@ -56,8 +66,18 @@
         "target": 253.83,
         "today_vol": 39597,
         "prev_vol": 79650,
-        "drop_pct": 15.9,
-        "drop_days": 41
+        "drop_pct": 24.6,
+        "drop_days": 54
+    },
+    {
+        "symbol": "PNSC",
+        "entry": 571.29,
+        "stop": 544.75,
+        "target": 624.37,
+        "today_vol": 10200,
+        "prev_vol": 30104,
+        "drop_pct": 4.4,
+        "drop_days": 6
     },
     {
         "symbol": "TOMCL",
@@ -76,7 +96,7 @@
         "target": 16.39,
         "today_vol": 115654,
         "prev_vol": 208242,
-        "drop_pct": 23.6,
-        "drop_days": 44
+        "drop_pct": 26.1,
+        "drop_days": 58
     }
 ]
