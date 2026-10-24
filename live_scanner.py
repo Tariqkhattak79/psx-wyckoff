@@ -3,9 +3,8 @@ import os
 import json
 
 DATA_FOLDER = "data"
-MIN_DROP_PCT = 3.0     # Minimum total drop over 2 months
-MIN_RED_CANDLE = 2.0   # Yesterday's red candle must drop at least 2%
-LOOKBACK_DAYS = 60     # Look back 2 months
+MIN_DROP_PCT = 3.0   # Catch everything that dropped at least 3%
+LOOKBACK_DAYS = 60   # Look back 2 months
 
 def run_scan():
     results = []
@@ -33,19 +32,22 @@ def run_scan():
             is_downtrend = drop_pct >= MIN_DROP_PCT
             days_since_high = len(df) - 1 - high_idx
             
-            # 2. YESTERDAY WAS A BIG RED CANDLE
-            # Calculate the size of yesterday's candle body (open to close)
-            red_candle_size = ((yesterday['open'] - yesterday['close']) / yesterday['open']) * 100
-            is_big_red = (yesterday['close'] < yesterday['open']) and (red_candle_size >= MIN_RED_CANDLE)
-            
-            # 3. TODAY IS A LOW VOLUME GREEN CANDLE
+            # 2. EXHAUSTION BOUNCE (Wide rules)
             is_green = today['close'] > today['open']
+            
+            # Volume must be lower than the 3-day average
             avg_prev_vol = df['volume'].iloc[-4:-1].mean()
             low_vol = today['volume'] < avg_prev_vol
+            
+            # At least 3 red days in the last 5 days
+            last_5_days = df.iloc[-6:-1]
+            red_days_count = sum(last_5_days['close'] < last_5_days['open'])
+            recent_red = red_days_count >= 3
 
-            if is_green and low_vol and is_downtrend and is_big_red:
+            if is_green and low_vol and is_downtrend and recent_red:
                 entry = round(today['close'], 2)
-                stop = round(yesterday['low'] * 0.99, 2) # Stop below the big red candle
+                # Stop is below the lowest low of the last 3 days
+                stop = round(df['low'].iloc[-3:].min() * 0.99, 2)
                 target = round(entry + ((entry - stop) * 2), 2)
                 
                 results.append({
@@ -58,7 +60,7 @@ def run_scan():
                     "drop_pct": round(drop_pct, 1),
                     "drop_days": int(days_since_high)
                 })
-                print(f"SIGNAL: {sym} (Yesterday Dropped {red_candle_size:.1f}%)")
+                print(f"SIGNAL: {sym} (Drop {drop_pct:.1f}%)")
         except Exception: pass
 
     with open("live_scan.json", "w") as f:
