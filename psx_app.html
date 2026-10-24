@@ -350,12 +350,11 @@ async function load(){
   d1.sort((a,b)=>order[a.stage]-order[b.stage]);
   wyckoffData=d1; daytradeData=d2;
   
-  // Load live_scan.json from GitHub
+  // Load live_scan.json from GitHub with cache busting
   try {
-      const r3 = await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json');
+      const r3 = await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json?t=' + new Date().getTime());
       if(r3.ok) {
           const liveData = await r3.json();
-          // Safety check: Ensure it's an array before assigning
           if (Array.isArray(liveData)) {
               exhaustionData = liveData;
           } else {

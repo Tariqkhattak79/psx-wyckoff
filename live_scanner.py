@@ -69,7 +69,10 @@ def run_scan():
             
         print(f"Scanning {i+1}/{len(files)}...", end="\r")
 
-    # Save to JSON for the App
+    # --- THE FIX: DELETE OLD FILE, THEN WRITE FRESH DATA ---
+    if os.path.exists("live_scan.json"):
+        os.remove("live_scan.json")
+        
     with open("live_scan.json", "w") as f:
         json.dump(results, f, indent=4)
         
