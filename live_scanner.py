@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import json
+import datetime
 
 # --- CONFIGURATION ---
 DATA_FOLDER = "data"
@@ -20,38 +21,27 @@ def run_scan():
         path = os.path.join(DATA_FOLDER, filename)
         
         try:
-            # 1. Load the CSV
             df = pd.read_csv(path)
             df = df.sort_values("date").reset_index(drop=True)
             
-            # Need at least 6 days of data to check the last 5 days + today
             if len(df) < 6:
                 continue
 
-            # 2. Get Today and Yesterday Data
             today = df.iloc[-1]
             yesterday = df.iloc[-2]
             
-            # 3. The Logic
-            # Condition A: Yesterday was RED
             prev_is_red = yesterday['close'] < yesterday['open']
-            
-            # Condition B: Today is GREEN
             is_green = today['close'] > today['open']
-            
-            # Condition C: Today's Volume is LOWER than yesterday's
             low_vol = today['volume'] < yesterday['volume']
             
-            # Condition D: At least 3 red candles in the 5 days before today
             last_5_days = df.iloc[-6:-1] 
             red_days_count = sum(last_5_days['close'] < last_5_days['open'])
             continuous_drop = red_days_count >= 3
 
             if prev_is_red and is_green and low_vol and continuous_drop:
                 entry = round(today['close'], 2)
-                stop = round(yesterday['low'] * 0.99, 2) # 1% below yesterday's low
-                risk = entry - stop
-                target = round(entry + (risk * 2), 2) # 1:2 Risk Reward
+                stop = round(yesterday['low'] * 0.99, 2)
+                target = round(entry + ((entry - stop) * 2), 2)
                 
                 results.append({
                     "symbol": sym,
@@ -62,14 +52,13 @@ def run_scan():
                     "prev_vol": int(yesterday['volume']),
                     "red_days": int(red_days_count)
                 })
-                print(f"\nSIGNAL FOUND: {sym}")
+                print(f"SIGNAL FOUND: {sym}")
 
         except Exception as e:
-            pass # Skip files that are empty or have bad data
+            pass 
             
         print(f"Scanning {i+1}/{len(files)}...", end="\r")
 
-    # --- THE FIX: DELETE OLD FILE, THEN WRITE FRESH DATA ---
     if os.path.exists("live_scan.json"):
         os.remove("live_scan.json")
         
@@ -77,7 +66,6 @@ def run_scan():
         json.dump(results, f, indent=4)
         
     print(f"\nScan Complete. Found {len(results)} signals. Saved to live_scan.json")
-    print("You can now open psx_app.html to view the results!")
 
 if __name__ == "__main__":
     run_scan()
