@@ -1,38 +1,52 @@
 [
     {
-        "symbol": "AGP",
-        "entry": 155.67,
-        "stop": 153.51,
-        "target": 159.99,
-        "today_vol": 46847,
-        "prev_vol": 119279,
-        "red_days": 3
+        "symbol": "BIFO",
+        "entry": 104.14,
+        "stop": 102.07,
+        "target": 108.28,
+        "today_vol": 14936,
+        "prev_vol": 15408,
+        "drop_pct": 19.8,
+        "drop_days": 29
     },
     {
-        "symbol": "AKBL",
-        "entry": 106.61,
-        "stop": 103.56,
-        "target": 112.71,
-        "today_vol": 1133203,
-        "prev_vol": 1684539,
-        "red_days": 3
+        "symbol": "BNL",
+        "entry": 5.13,
+        "stop": 5.02,
+        "target": 5.35,
+        "today_vol": 869800,
+        "prev_vol": 1974011,
+        "drop_pct": 21.3,
+        "drop_days": 29
     },
     {
-        "symbol": "BAFL",
-        "entry": 55.51,
-        "stop": 54.45,
-        "target": 57.63,
-        "today_vol": 1303399,
-        "prev_vol": 2911910,
-        "red_days": 4
+        "symbol": "BNWM",
+        "entry": 60.82,
+        "stop": 59.55,
+        "target": 63.36,
+        "today_vol": 3744,
+        "prev_vol": 5269,
+        "drop_pct": 12.8,
+        "drop_days": 26
     },
     {
-        "symbol": "BML",
-        "entry": 58.71,
-        "stop": 55.94,
-        "target": 64.25,
-        "today_vol": 250908,
-        "prev_vol": 281465,
-        "red_days": 4
+        "symbol": "MUREB",
+        "entry": 925.45,
+        "stop": 892.24,
+        "target": 991.87,
+        "today_vol": 490,
+        "prev_vol": 717,
+        "drop_pct": 9.0,
+        "drop_days": 19
+    },
+    {
+        "symbol": "TOMCL",
+        "entry": 28.72,
+        "stop": 27.97,
+        "target": 30.22,
+        "today_vol": 649875,
+        "prev_vol": 1687310,
+        "drop_pct": 25.0,
+        "drop_days": 29
     }
 ]
