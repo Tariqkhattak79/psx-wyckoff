@@ -1,0 +1,25 @@
+name: 3PM Live Exhaustion Scan
+
+on:
+  schedule:
+    - cron: '0 10 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  live-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        run: |
+          pip install pandas tvdatafeed
+          
+      - name: Run 3PM Live Script
+        run: python live_3pm_scan.py
