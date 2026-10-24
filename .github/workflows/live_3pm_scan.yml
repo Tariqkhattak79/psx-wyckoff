@@ -19,7 +19,7 @@ jobs:
           
       - name: Install dependencies
         run: |
-          pip install pandas tvdatafeed
+         pip install pandas git+https://github.com/rongardF/tvdatafeed.git
           
       - name: Run 3PM Live Script
         run: python live_3pm_scan.py
