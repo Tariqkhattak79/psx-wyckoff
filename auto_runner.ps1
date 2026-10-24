@@ -1,4 +1,4 @@
-SSet-Location "C:\Users\Tariq Usman\Desktop\psx-wyckoff"
+Set-Location "C:\Users\Tariq Usman\Desktop\psx-wyckoff"
 
 # 1. Run the Python scanner
 python live_scanner.py
