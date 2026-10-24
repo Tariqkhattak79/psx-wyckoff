@@ -3,8 +3,9 @@ import os
 import json
 
 DATA_FOLDER = "data"
-MIN_DROP_PCT = 3.0   # Lowered to 3% to catch everything
-LOOKBACK_DAYS = 60   # Look back 2 months (approx 60 trading days)
+MIN_DROP_PCT = 3.0     # Minimum total drop over 2 months
+MIN_RED_CANDLE = 2.0   # Yesterday's red candle must drop at least 2%
+LOOKBACK_DAYS = 60     # Look back 2 months
 
 def run_scan():
     results = []
@@ -22,32 +23,29 @@ def run_scan():
             if len(df) < 10: continue
             
             today = df.iloc[-1]
+            yesterday = df.iloc[-2]
             
-            # MACRO DOWNTREND (60 Days)
+            # 1. MACRO DOWNTREND (60 Days)
             lookback_window = df.tail(LOOKBACK_DAYS)
             high_idx = lookback_window['high'].idxmax()
             recent_high = df.loc[high_idx, 'high']
-            
-            # Calculate drop from high to today's low
             drop_pct = ((recent_high - today['low']) / recent_high) * 100
             is_downtrend = drop_pct >= MIN_DROP_PCT
             days_since_high = len(df) - 1 - high_idx
             
-            # EXHAUSTION BOUNCE
-            is_green = today['close'] > today['open']
+            # 2. YESTERDAY WAS A BIG RED CANDLE
+            # Calculate the size of yesterday's candle body (open to close)
+            red_candle_size = ((yesterday['open'] - yesterday['close']) / yesterday['open']) * 100
+            is_big_red = (yesterday['close'] < yesterday['open']) and (red_candle_size >= MIN_RED_CANDLE)
             
-            # Today's volume must be lower than the average of the last 3 days
+            # 3. TODAY IS A LOW VOLUME GREEN CANDLE
+            is_green = today['close'] > today['open']
             avg_prev_vol = df['volume'].iloc[-4:-1].mean()
             low_vol = today['volume'] < avg_prev_vol
-            
-            # At least 3 red days in the last 5 days (choppy downtrend)
-            last_5_days = df.iloc[-6:-1]
-            red_days_count = sum(last_5_days['close'] < last_5_days['open'])
-            recent_red = red_days_count >= 3
 
-            if is_green and low_vol and is_downtrend and recent_red:
+            if is_green and low_vol and is_downtrend and is_big_red:
                 entry = round(today['close'], 2)
-                stop = round(df['low'].iloc[-3:].min() * 0.99, 2)
+                stop = round(yesterday['low'] * 0.99, 2) # Stop below the big red candle
                 target = round(entry + ((entry - stop) * 2), 2)
                 
                 results.append({
@@ -60,7 +58,7 @@ def run_scan():
                     "drop_pct": round(drop_pct, 1),
                     "drop_days": int(days_since_high)
                 })
-                print(f"SIGNAL: {sym} (Drop {drop_pct:.1f}% over {days_since_high} days)")
+                print(f"SIGNAL: {sym} (Yesterday Dropped {red_candle_size:.1f}%)")
         except Exception: pass
 
     with open("live_scan.json", "w") as f:
