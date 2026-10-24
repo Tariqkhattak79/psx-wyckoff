@@ -2,12 +2,15 @@ name: 3PM Live Exhaustion Scan
 
 on:
   schedule:
-    - cron: '0 10 * * 1-5'
-  workflow_dispatch:
+    - cron: '0 10 * * 1-5' # Runs at 10:00 UTC = 3:00 PM PKT
+  workflow_dispatch: # Lets you test it manually
 
 jobs:
   live-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # REQUIRED: Allows the script to save the JSON back to GitHub
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,10 +22,19 @@ jobs:
           
       - name: Install dependencies
         run: |
-         pip install pandas git+https://github.com/rongardF/tvdatafeed.git
+          pip install pandas git+https://github.com/rongardF/tvdatafeed.git
           
       - name: Run 3PM Live Script
         env:
           TV_USERNAME: ${{ secrets.TV_USERNAME }}
           TV_PASSWORD: ${{ secrets.TV_PASSWORD }}
         run: python live_3pm_scan.py
+        
+      # NEW STEP: Save the results back to GitHub
+      - name: Commit and Push updated JSON
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add live_scan.json
+          git commit -m "Updated live scan results [skip ci]" || echo "No changes to commit"
+          git push
