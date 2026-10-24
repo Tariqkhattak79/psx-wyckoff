@@ -6,7 +6,7 @@
         "target": 51.68,
         "today_vol": 17219,
         "prev_vol": 30419,
-        "drop_pct": 24.5,
+        "drop_pct": 22.8,
         "drop_days": 36
     },
     {
@@ -16,7 +16,7 @@
         "target": 45.99,
         "today_vol": 11789,
         "prev_vol": 80681,
-        "drop_pct": 16.0,
+        "drop_pct": 14.9,
         "drop_days": 27
     },
     {
@@ -26,7 +26,7 @@
         "target": 159.99,
         "today_vol": 46847,
         "prev_vol": 119279,
-        "drop_pct": 20.7,
+        "drop_pct": 20.1,
         "drop_days": 52
     },
     {
@@ -36,7 +36,7 @@
         "target": 112.71,
         "today_vol": 1133203,
         "prev_vol": 1684539,
-        "drop_pct": 6.9,
+        "drop_pct": 5.7,
         "drop_days": 34
     },
     {
@@ -46,7 +46,7 @@
         "target": 1139.79,
         "today_vol": 343180,
         "prev_vol": 588256,
-        "drop_pct": 15.7,
+        "drop_pct": 13.8,
         "drop_days": 13
     },
     {
@@ -66,7 +66,7 @@
         "target": 64.25,
         "today_vol": 250908,
         "prev_vol": 281465,
-        "drop_pct": 12.3,
+        "drop_pct": 12.5,
         "drop_days": 6
     },
     {
@@ -76,7 +76,7 @@
         "target": 472.81,
         "today_vol": 8829,
         "prev_vol": 9164,
-        "drop_pct": 11.8,
+        "drop_pct": 11.5,
         "drop_days": 57
     },
     {
@@ -96,7 +96,7 @@
         "target": 86.17,
         "today_vol": 1346,
         "prev_vol": 5832,
-        "drop_pct": 26.6,
+        "drop_pct": 26.4,
         "drop_days": 47
     },
     {
@@ -116,7 +116,7 @@
         "target": 226.86,
         "today_vol": 8264,
         "prev_vol": 62379,
-        "drop_pct": 21.3,
+        "drop_pct": 20.6,
         "drop_days": 57
     },
     {
@@ -126,7 +126,7 @@
         "target": 8.36,
         "today_vol": 42425,
         "prev_vol": 355083,
-        "drop_pct": 22.9,
+        "drop_pct": 22.8,
         "drop_days": 54
     },
     {
@@ -136,7 +136,7 @@
         "target": 991.87,
         "today_vol": 490,
         "prev_vol": 717,
-        "drop_pct": 6.5,
+        "drop_pct": 9.0,
         "drop_days": 19
     },
     {
@@ -146,7 +146,7 @@
         "target": 412.57,
         "today_vol": 205,
         "prev_vol": 895,
-        "drop_pct": 21.6,
+        "drop_pct": 19.8,
         "drop_days": 39
     },
     {
@@ -156,7 +156,7 @@
         "target": 99.4,
         "today_vol": 23500089,
         "prev_vol": 25877567,
-        "drop_pct": 18.9,
+        "drop_pct": 18.8,
         "drop_days": 4
     },
     {
@@ -166,7 +166,7 @@
         "target": 122.52,
         "today_vol": 980,
         "prev_vol": 10901,
-        "drop_pct": 48.3,
+        "drop_pct": 47.9,
         "drop_days": 33
     },
     {
@@ -176,7 +176,7 @@
         "target": 15.7,
         "today_vol": 359595,
         "prev_vol": 456798,
-        "drop_pct": 26.9,
+        "drop_pct": 26.5,
         "drop_days": 55
     }
 ]
