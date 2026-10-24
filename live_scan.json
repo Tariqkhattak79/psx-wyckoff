@@ -2,12 +2,12 @@
     {
         "symbol": "BIFO",
         "entry": 104.14,
-        "stop": 102.07,
-        "target": 108.28,
+        "stop": 101.08,
+        "target": 110.26,
         "today_vol": 14936,
-        "prev_vol": 15408,
-        "drop_pct": 19.8,
-        "drop_days": 29
+        "prev_vol": 26656,
+        "drop_pct": 24.7,
+        "drop_days": 44
     },
     {
         "symbol": "BNL",
@@ -15,19 +15,29 @@
         "stop": 5.02,
         "target": 5.35,
         "today_vol": 869800,
-        "prev_vol": 1974011,
-        "drop_pct": 21.3,
-        "drop_days": 29
+        "prev_vol": 1478804,
+        "drop_pct": 27.1,
+        "drop_days": 44
     },
     {
-        "symbol": "BNWM",
-        "entry": 60.82,
-        "stop": 59.55,
-        "target": 63.36,
-        "today_vol": 3744,
-        "prev_vol": 5269,
-        "drop_pct": 12.8,
-        "drop_days": 26
+        "symbol": "GWLC",
+        "entry": 46.51,
+        "stop": 45.14,
+        "target": 49.25,
+        "today_vol": 36073,
+        "prev_vol": 67532,
+        "drop_pct": 17.7,
+        "drop_days": 31
+    },
+    {
+        "symbol": "IBLHL",
+        "entry": 41.03,
+        "stop": 39.6,
+        "target": 43.89,
+        "today_vol": 26614,
+        "prev_vol": 31849,
+        "drop_pct": 20.4,
+        "drop_days": 41
     },
     {
         "symbol": "MUREB",
@@ -35,18 +45,38 @@
         "stop": 892.24,
         "target": 991.87,
         "today_vol": 490,
-        "prev_vol": 717,
-        "drop_pct": 9.0,
+        "prev_vol": 514,
+        "drop_pct": 6.5,
         "drop_days": 19
+    },
+    {
+        "symbol": "PIOC",
+        "entry": 236.61,
+        "stop": 228.0,
+        "target": 253.83,
+        "today_vol": 39597,
+        "prev_vol": 79650,
+        "drop_pct": 15.9,
+        "drop_days": 41
     },
     {
         "symbol": "TOMCL",
         "entry": 28.72,
-        "stop": 27.97,
-        "target": 30.22,
+        "stop": 26.49,
+        "target": 33.18,
         "today_vol": 649875,
-        "prev_vol": 1687310,
-        "drop_pct": 25.0,
-        "drop_days": 29
+        "prev_vol": 2560925,
+        "drop_pct": 31.2,
+        "drop_days": 42
+    },
+    {
+        "symbol": "WAHDAT",
+        "entry": 14.23,
+        "stop": 13.15,
+        "target": 16.39,
+        "today_vol": 115654,
+        "prev_vol": 208242,
+        "drop_pct": 23.6,
+        "drop_days": 44
     }
 ]
