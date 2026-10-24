@@ -1,20 +1,21 @@
 import pandas as pd
 import os
 import json
-import datetime
 
 # --- CONFIGURATION ---
 DATA_FOLDER = "data"
+MIN_DROP_PCT = 8.0  
+LOOKBACK_DAYS = 30  
 
 def run_scan():
     results = []
     
     if not os.path.exists(DATA_FOLDER):
-        print("ERROR: 'data' folder not found. Please run fetch_data.py first.")
+        print("ERROR: 'data' folder not found.")
         return
 
     files = [f for f in os.listdir(DATA_FOLDER) if f.endswith('.csv')]
-    print(f"Starting Scan of {len(files)} symbols from PSX data...")
+    print(f"Starting Scan of {len(files)} symbols...")
     
     for i, filename in enumerate(files):
         sym = filename.replace(".csv", "")
@@ -30,15 +31,26 @@ def run_scan():
             today = df.iloc[-1]
             yesterday = df.iloc[-2]
             
+            # 1. Exhaustion Logic
             prev_is_red = yesterday['close'] < yesterday['open']
             is_green = today['close'] > today['open']
             low_vol = today['volume'] < yesterday['volume']
             
-            last_5_days = df.iloc[-6:-1] 
-            red_days_count = sum(last_5_days['close'] < last_5_days['open'])
-            continuous_drop = red_days_count >= 3
+            # 2. Macro Downtrend Logic
+            lookback_window = df.tail(LOOKBACK_DAYS)
+            
+            # Find the index of the highest high in the lookback window
+            high_idx = lookback_window['high'].idxmax()
+            recent_high = df.loc[high_idx, 'high']
+            
+            # Calculate Drop %
+            drop_pct = ((recent_high - yesterday['low']) / recent_high) * 100
+            is_downtrend = drop_pct >= MIN_DROP_PCT
+            
+            # Calculate how many days ago the high was
+            days_since_high = len(df) - 1 - high_idx
 
-            if prev_is_red and is_green and low_vol and continuous_drop:
+            if prev_is_red and is_green and low_vol and is_downtrend:
                 entry = round(today['close'], 2)
                 stop = round(yesterday['low'] * 0.99, 2)
                 target = round(entry + ((entry - stop) * 2), 2)
@@ -50,9 +62,10 @@ def run_scan():
                     "target": target,
                     "today_vol": int(today['volume']),
                     "prev_vol": int(yesterday['volume']),
-                    "red_days": int(red_days_count)
+                    "drop_pct": round(drop_pct, 1),
+                    "drop_days": int(days_since_high) # <--- NEW: EXACT DAYS
                 })
-                print(f"SIGNAL FOUND: {sym}")
+                print(f"SIGNAL FOUND: {sym} (Dropped {drop_pct:.1f}% over {days_since_high} days)")
 
         except Exception as e:
             pass 

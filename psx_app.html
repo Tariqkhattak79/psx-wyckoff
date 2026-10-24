@@ -254,7 +254,8 @@ function exhaustionCard(s){
   
   h+="<div class='meta'>";
   h+="<div>Yesterday Vol: <b>"+fmtVal(s.prev_vol)+"</b> | Today Vol: <b>"+fmtVal(s.today_vol)+"</b></div>";
-  h+="<div>Context: <b>"+s.red_days+"</b> consecutive red days before today.</div>";
+  // THIS LINE SHOWS THE DROP % AND THE DAYS
+  h+="<div>Context: Dropped <b>"+s.drop_pct+"%</b> over <b>"+s.drop_days+"</b> days.</div>";
   h+="</div>";
 
   h+="<div class='levels'>";
@@ -263,7 +264,7 @@ function exhaustionCard(s){
   h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+s.target+"</div></div>";
   h+="</div>";
   
-  h+="<div class='reason'>Exhaustion Bounce: 3+ red days, green today on drastically lower volume.</div></div>";
+  h+="<div class='reason'>Exhaustion Bounce: Green today on drastically lower volume after a major downtrend.</div></div>";
   return h;
 }
 
