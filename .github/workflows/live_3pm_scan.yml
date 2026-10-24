@@ -22,4 +22,7 @@ jobs:
          pip install pandas git+https://github.com/rongardF/tvdatafeed.git
           
       - name: Run 3PM Live Script
+        env:
+          TV_USERNAME: ${{ secrets.TV_USERNAME }}
+          TV_PASSWORD: ${{ secrets.TV_PASSWORD }}
         run: python live_3pm_scan.py
