@@ -29,6 +29,8 @@ h1{font-size:20px;margin-bottom:4px}
 .sec-btn.BEAR{border-left-color:#f85149}.sec-btn.BEAR .letter,.sec-btn.BEAR .act{color:#f85149}
 .sec-btn.open{background:#1a2338}
 .sec-btn.zero{opacity:0.5}
+/* NEW STYLES FOR EXHAUSTION TAB */
+.sec-btn.EXH{border-left-color:#f0883e}.sec-btn.EXH .letter,.sec-btn.EXH .act{color:#f0883e}
 .card{background:#121a2e;border-radius:10px;padding:14px;margin-bottom:8px;border-left:4px solid #7d8590}
 .card.C1{border-left-color:#7ee787}
 .card.C2{border-left-color:#2ea043}
@@ -36,6 +38,7 @@ h1{font-size:20px;margin-bottom:4px}
 .card.B{border-left-color:#d29922}
 .card.A{border-left-color:#7d8590}
 .card.E{border-left-color:#e3b341}
+.card.EXH{border-left-color:#f0883e;background:linear-gradient(90deg,#2a1a10 0%,#121a2e 100%)}
 .card.t1{background:linear-gradient(90deg,#2a1f05 0%,#121a2e 100%);border-left:5px solid #d4af37}
 .card.t2{background:linear-gradient(90deg,#1e2228 0%,#121a2e 100%);border-left:5px solid #c0c0c0}
 .card.t3{background:linear-gradient(90deg,#2a1a10 0%,#121a2e 100%);border-left:5px solid #cd7f32}
@@ -55,6 +58,7 @@ h1{font-size:20px;margin-bottom:4px}
 .badge.E{background:#3a2f0f;color:#e3b341}
 .badge.bull{background:#0d3a1a;color:#00d26a}
 .badge.bear{background:#3a0d0d;color:#f85149}
+.badge.EXH{background:#3a1f0f;color:#f0883e}
 .typebadge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;margin-top:6px;margin-right:6px;letter-spacing:0.5px}
 .typebadge.t1{background:#d4af37;color:#1a1200}
 .typebadge.t2{background:#c0c0c0;color:#111}
@@ -115,6 +119,10 @@ h1{font-size:20px;margin-bottom:4px}
 <div class="main-title">Hougaard TFM (Day Trading)</div>
 <div id="daytrade-sections"></div>
 
+<!-- NEW EXHAUSTION TAB SECTION -->
+<div class="main-title">Exhaustion Setup (Live 3PM)</div>
+<div id="exhaustion-sections"></div>
+
 <script>
 const URL_BASE="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/";
 const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
@@ -124,9 +132,10 @@ const WYCKOFF_STAGES=[
 const DAY_STAGES=[
   {k:"BULL",label:"BULLISH (BUY)"},{k:"BEAR",label:"BEARISH (AVOID)"}
 ];
-let wyckoffData=[], daytradeData=[];
+let wyckoffData=[], daytradeData=[], exhaustionData=[];
 let openW={A:false,B:false,C1:false,C2:false,D:false,E:false};
 let openD={BULL:false,BEAR:false};
+let openE={EXH:false}; // State for new tab
 
 function fmtVal(v){ if(!v) return "—"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
 
@@ -238,6 +247,26 @@ function daytradeCard(s){
   return h;
 }
 
+// NEW CARD FOR EXHAUSTION TAB
+function exhaustionCard(s){
+  let h="<div class='card EXH'>";
+  h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span></div><div class='badge EXH'>LIVE</div></div>";
+  
+  h+="<div class='meta'>";
+  h+="<div>Yesterday Vol: <b>"+fmtVal(s.prev_vol)+"</b> | Today Vol: <b>"+fmtVal(s.today_vol)+"</b></div>";
+  h+="<div>Context: <b>"+s.red_days+"</b> consecutive red days before today.</div>";
+  h+="</div>";
+
+  h+="<div class='levels'>";
+  h+="<div class='lvl buy'><div class='lbl'>Entry</div><div class='val'>"+s.entry+"</div></div>";
+  h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
+  h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+s.target+"</div></div>";
+  h+="</div>";
+  
+  h+="<div class='reason'>Exhaustion Bounce: 3+ red days, green today on drastically lower volume.</div></div>";
+  return h;
+}
+
 function renderWyckoff(q){
   const c=document.getElementById("wyckoff-sections");
   let h="";
@@ -272,12 +301,41 @@ function renderDaytrade(q){
   c.innerHTML=h;
 }
 
+// NEW RENDER FOR EXHAUSTION TAB
+function renderExhaustion(q){
+  const c=document.getElementById("exhaustion-sections");
+  let h="";
+  const st = {k:"EXH", label:"LIVE 3PM SIGNALS"};
+  
+  let rows = exhaustionData;
+  if(q) rows = rows.filter(x=>x.symbol.includes(q));
+  
+  const zero = rows.length === 0;
+  const isOpen = !zero && (openE["EXH"] || (q && rows.length > 0));
+  
+  h+="<div class='group'><div class='sec-btn EXH"+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleE(\"EXH\")'>";
+  h+="<div class='left'><span class='letter'>!</span><span class='count'>"+rows.length+"</span></div>";
+  h+="<span class='act'>"+st.label+"</span></div>";
+  
+  if(isOpen){ 
+      for(const r of rows) h+=exhaustionCard(r); 
+  } else if (!zero) {
+      // Show a message if collapsed
+      h+="<div class='empty'>Click to expand signals</div>";
+  }
+  h+="</div>";
+  c.innerHTML=h;
+}
+
 function toggleW(k){ openW[k]=!openW[k]; renderAll(); }
 function toggleD(k){ openD[k]=!openD[k]; renderAll(); }
+function toggleE(k){ openE[k]=!openE[k]; renderAll(); }
+
 function renderAll(){
   const q=document.getElementById("search").value.trim().toUpperCase();
   renderWyckoff(q);
   renderDaytrade(q);
+  renderExhaustion(q);
 }
 
 async function load(){
@@ -291,7 +349,24 @@ async function load(){
   const order={C2:0,C1:1,D:2,B:3,A:4,E:5};
   d1.sort((a,b)=>order[a.stage]-order[b.stage]);
   wyckoffData=d1; daytradeData=d2;
-  document.getElementById("date").textContent="Run: "+(d1[0]?d1[0].run_date:"no data")+" | Wyckoff: "+d1.length+" | Day: "+d2.length;
+  
+  // Load live_scan.json from GitHub
+  try {
+      const r3 = await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json');
+      if(r3.ok) {
+          const liveData = await r3.json();
+          // Safety check: Ensure it's an array before assigning
+          if (Array.isArray(liveData)) {
+              exhaustionData = liveData;
+          } else {
+              console.log("live_scan.json is not an array yet.");
+          }
+      }
+  } catch(e) {
+      console.log("No live_scan.json found on GitHub yet.");
+  }
+  
+  document.getElementById("date").textContent="Run: "+(d1[0]?d1[0].run_date:"no data")+" | Wyckoff: "+d1.length+" | Day: "+d2.length+" | Live: "+exhaustionData.length;
   renderAll();
   document.getElementById("search").addEventListener("input",renderAll);
 }
