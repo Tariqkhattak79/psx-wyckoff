@@ -3,8 +3,8 @@ import os
 import json
 
 DATA_FOLDER = "data"
-MIN_DROP_PCT = 3.0   # Catch everything that dropped at least 3%
-LOOKBACK_DAYS = 60   # Look back 2 months
+MIN_DROP_PCT = 3.0   
+LOOKBACK_DAYS = 60   
 
 def run_scan():
     results = []
@@ -24,7 +24,7 @@ def run_scan():
             today = df.iloc[-1]
             yesterday = df.iloc[-2]
             
-            # 1. MACRO DOWNTREND (60 Days)
+            # 1. MACRO DOWNTREND
             lookback_window = df.tail(LOOKBACK_DAYS)
             high_idx = lookback_window['high'].idxmax()
             recent_high = df.loc[high_idx, 'high']
@@ -32,22 +32,18 @@ def run_scan():
             is_downtrend = drop_pct >= MIN_DROP_PCT
             days_since_high = len(df) - 1 - high_idx
             
-            # 2. EXHAUSTION BOUNCE (Wide rules)
+            # 2. STRICT EXHAUSTION BOUNCE
+            # Yesterday MUST be RED
+            prev_is_red = yesterday['close'] < yesterday['open']
+            # Today MUST be GREEN
             is_green = today['close'] > today['open']
             
-            # Volume must be lower than the 3-day average
-            avg_prev_vol = df['volume'].iloc[-4:-1].mean()
-            low_vol = today['volume'] < avg_prev_vol
-            
-            # At least 3 red days in the last 5 days
-            last_5_days = df.iloc[-6:-1]
-            red_days_count = sum(last_5_days['close'] < last_5_days['open'])
-            recent_red = red_days_count >= 3
+            # Volume must be lower than yesterday
+            low_vol = today['volume'] < yesterday['volume']
 
-            if is_green and low_vol and is_downtrend and recent_red:
+            if prev_is_red and is_green and low_vol and is_downtrend:
                 entry = round(today['close'], 2)
-                # Stop is below the lowest low of the last 3 days
-                stop = round(df['low'].iloc[-3:].min() * 0.99, 2)
+                stop = round(yesterday['low'] * 0.99, 2) 
                 target = round(entry + ((entry - stop) * 2), 2)
                 
                 results.append({
@@ -56,11 +52,11 @@ def run_scan():
                     "stop": stop,
                     "target": target,
                     "today_vol": int(today['volume']),
-                    "prev_vol": int(avg_prev_vol),
+                    "prev_vol": int(yesterday['volume']),
                     "drop_pct": round(drop_pct, 1),
                     "drop_days": int(days_since_high)
                 })
-                print(f"SIGNAL: {sym} (Drop {drop_pct:.1f}%)")
+                print(f"SIGNAL: {sym}")
         except Exception: pass
 
     with open("live_scan.json", "w") as f:

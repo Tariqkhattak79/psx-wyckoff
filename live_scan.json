@@ -1,53 +1,133 @@
 [
     {
-        "symbol": "ACPL",
-        "entry": 239.39,
-        "stop": 234.63,
-        "target": 248.91,
-        "today_vol": 18211,
-        "prev_vol": 18672,
-        "drop_pct": 4.6,
+        "symbol": "ADMM",
+        "entry": 50.3,
+        "stop": 49.61,
+        "target": 51.68,
+        "today_vol": 17219,
+        "prev_vol": 30419,
+        "drop_pct": 24.5,
+        "drop_days": 36
+    },
+    {
+        "symbol": "AGL",
+        "entry": 43.71,
+        "stop": 42.57,
+        "target": 45.99,
+        "today_vol": 11789,
+        "prev_vol": 80681,
+        "drop_pct": 16.0,
+        "drop_days": 27
+    },
+    {
+        "symbol": "AGP",
+        "entry": 155.67,
+        "stop": 153.51,
+        "target": 159.99,
+        "today_vol": 46847,
+        "prev_vol": 119279,
+        "drop_pct": 20.7,
+        "drop_days": 52
+    },
+    {
+        "symbol": "AKBL",
+        "entry": 106.61,
+        "stop": 103.56,
+        "target": 112.71,
+        "today_vol": 1133203,
+        "prev_vol": 1684539,
+        "drop_pct": 6.9,
+        "drop_days": 34
+    },
+    {
+        "symbol": "ATRL",
+        "entry": 1090.75,
+        "stop": 1066.23,
+        "target": 1139.79,
+        "today_vol": 343180,
+        "prev_vol": 588256,
+        "drop_pct": 15.7,
+        "drop_days": 13
+    },
+    {
+        "symbol": "BAFL",
+        "entry": 55.51,
+        "stop": 54.45,
+        "target": 57.63,
+        "today_vol": 1303399,
+        "prev_vol": 2911910,
+        "drop_pct": 8.3,
+        "drop_days": 51
+    },
+    {
+        "symbol": "BML",
+        "entry": 58.71,
+        "stop": 55.94,
+        "target": 64.25,
+        "today_vol": 250908,
+        "prev_vol": 281465,
+        "drop_pct": 12.3,
         "drop_days": 6
     },
     {
-        "symbol": "BIFO",
-        "entry": 104.14,
-        "stop": 101.08,
-        "target": 110.26,
-        "today_vol": 14936,
-        "prev_vol": 26656,
-        "drop_pct": 25.8,
-        "drop_days": 45
-    },
-    {
-        "symbol": "BNL",
-        "entry": 5.13,
-        "stop": 5.02,
-        "target": 5.35,
-        "today_vol": 869800,
-        "prev_vol": 1478804,
-        "drop_pct": 27.1,
-        "drop_days": 44
-    },
-    {
-        "symbol": "GWLC",
-        "entry": 46.51,
-        "stop": 45.14,
-        "target": 49.25,
-        "today_vol": 36073,
-        "prev_vol": 67532,
-        "drop_pct": 17.7,
-        "drop_days": 31
-    },
-    {
-        "symbol": "IBLHL",
-        "entry": 41.03,
-        "stop": 39.6,
-        "target": 43.89,
-        "today_vol": 26614,
-        "prev_vol": 31849,
-        "drop_pct": 25.6,
+        "symbol": "BWCL",
+        "entry": 452.55,
+        "stop": 442.42,
+        "target": 472.81,
+        "today_vol": 8829,
+        "prev_vol": 9164,
+        "drop_pct": 11.8,
         "drop_days": 57
+    },
+    {
+        "symbol": "CSAP",
+        "entry": 85.56,
+        "stop": 84.15,
+        "target": 88.38,
+        "today_vol": 159199,
+        "prev_vol": 186418,
+        "drop_pct": 24.8,
+        "drop_days": 58
+    },
+    {
+        "symbol": "GATI",
+        "entry": 81.67,
+        "stop": 79.42,
+        "target": 86.17,
+        "today_vol": 1346,
+        "prev_vol": 5832,
+        "drop_pct": 26.6,
+        "drop_days": 47
+    },
+    {
+        "symbol": "GCIL",
+        "entry": 30.98,
+        "stop": 30.34,
+        "target": 32.26,
+        "today_vol": 939412,
+        "prev_vol": 949435,
+        "drop_pct": 19.3,
+        "drop_days": 59
+    },
+    {
+        "symbol": "IGIHL",
+        "entry": 226.1,
+        "stop": 225.72,
+        "target": 226.86,
+        "today_vol": 8264,
+        "prev_vol": 62379,
+        "drop_pct": 21.3,
+        "drop_days": 57
+    },
+    {
+        "symbol": "ITTEFAQ",
+        "entry": 7.8,
+        "stop": 7.52,
+        "target": 8.36,
+        "today_vol": 42425,
+        "prev_vol": 355083,
+        "drop_pct": 22.9,
+        "drop_days": 54
     },
     {
         "symbol": "MUREB",
@@ -55,48 +135,48 @@
         "stop": 892.24,
         "target": 991.87,
         "today_vol": 490,
-        "prev_vol": 514,
+        "prev_vol": 717,
         "drop_pct": 6.5,
         "drop_days": 19
     },
     {
-        "symbol": "PIOC",
-        "entry": 236.61,
-        "stop": 228.0,
-        "target": 253.83,
-        "today_vol": 39597,
-        "prev_vol": 79650,
-        "drop_pct": 24.6,
-        "drop_days": 54
+        "symbol": "OTSU",
+        "entry": 379.15,
+        "stop": 362.44,
+        "target": 412.57,
+        "today_vol": 205,
+        "prev_vol": 895,
+        "drop_pct": 21.6,
+        "drop_days": 39
     },
     {
-        "symbol": "PNSC",
-        "entry": 571.29,
-        "stop": 544.75,
-        "target": 624.37,
-        "today_vol": 10200,
-        "prev_vol": 30104,
-        "drop_pct": 4.4,
-        "drop_days": 6
+        "symbol": "PRL",
+        "entry": 94.52,
+        "stop": 92.08,
+        "target": 99.4,
+        "today_vol": 23500089,
+        "prev_vol": 25877567,
+        "drop_pct": 18.9,
+        "drop_days": 4
     },
     {
-        "symbol": "TOMCL",
-        "entry": 28.72,
-        "stop": 26.49,
-        "target": 33.18,
-        "today_vol": 649875,
-        "prev_vol": 2560925,
-        "drop_pct": 31.2,
-        "drop_days": 42
+        "symbol": "TOWL",
+        "entry": 120.04,
+        "stop": 118.8,
+        "target": 122.52,
+        "today_vol": 980,
+        "prev_vol": 10901,
+        "drop_pct": 48.3,
+        "drop_days": 33
     },
     {
         "symbol": "WAHDAT",
-        "entry": 14.23,
-        "stop": 13.15,
-        "target": 16.39,
-        "today_vol": 115654,
-        "prev_vol": 208242,
-        "drop_pct": 26.1,
-        "drop_days": 58
+        "entry": 13.86,
+        "stop": 12.94,
+        "target": 15.7,
+        "today_vol": 359595,
+        "prev_vol": 456798,
+        "drop_pct": 26.9,
+        "drop_days": 55
     }
 ]
