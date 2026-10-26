@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0f1e">
 <title>PSX Signals</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -10,36 +11,67 @@ body{background:#0a0f1e;color:#e6edf3;font-family:-apple-system,system-ui,sans-s
 h1{font-size:20px;margin-bottom:4px}
 .sub{color:#7d8590;font-size:13px;margin-bottom:12px}
 .search{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #21262d;background:#121a2e;color:#e6edf3;font-size:14px;margin-bottom:12px}
+.search:focus{outline:none;border-color:#58a6ff}
 .main-title{font-size:14px;color:#8b949e;margin:14px 0 8px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
-.sec-btn{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#121a2e;border-radius:8px;border:1px solid #21262d;cursor:pointer;font-weight:600;border-left:5px solid #30363d}
+.sec-btn{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#121a2e;border-radius:8px;border:1px solid #21262d;cursor:pointer;user-select:none;font-weight:600;border-left:5px solid #30363d}
+.sec-btn:active{transform:scale(0.99)}
 .sec-btn .left{display:flex;align-items:center;gap:10px}
 .sec-btn .letter{font-size:18px;font-weight:700;width:28px;text-align:center}
 .sec-btn .count{font-size:13px;color:#8b949e}
-.sec-btn .act{font-size:12px;text-transform:uppercase;font-weight:700}
-.sec-btn.EXH{border-left-color:#f0883e}.sec-btn.EXH .act{color:#f0883e}
+.sec-btn .act{font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700}
+.sec-btn.A{border-left-color:#7d8590}.sec-btn.A .letter,.sec-btn.A .act{color:#7d8590}
+.sec-btn.B{border-left-color:#d29922}.sec-btn.B .letter,.sec-btn.B .act{color:#d29922}
+.sec-btn.C1{border-left-color:#7ee787}.sec-btn.C1 .letter,.sec-btn.C1 .act{color:#7ee787}
+.sec-btn.C2{border-left-color:#2ea043}.sec-btn.C2 .letter,.sec-btn.C2 .act{color:#2ea043}
+.sec-btn.D{border-left-color:#2ea043}.sec-btn.D .letter,.sec-btn.D .act{color:#2ea043}
+.sec-btn.E{border-left-color:#e3b341}.sec-btn.E .letter,.sec-btn.E .act{color:#e3b341}
+.sec-btn.BULL{border-left-color:#00d26a}.sec-btn.BULL .letter,.sec-btn.BULL .act{color:#00d26a}
+.sec-btn.BEAR{border-left-color:#f85149}.sec-btn.BEAR .letter,.sec-btn.BEAR .act{color:#f85149}
+.sec-btn.open{background:#1a2338}
+.sec-btn.zero{opacity:0.5}
+.sec-btn.EXH{border-left-color:#f0883e}.sec-btn.EXH .letter,.sec-btn.EXH .act{color:#f0883e}
 .card{background:#121a2e;border-radius:10px;padding:14px;margin-bottom:8px;border-left:4px solid #7d8590}
+.card.C1{border-left-color:#7ee787}
+.card.C2{border-left-color:#2ea043}
+.card.D{border-left-color:#2ea043}
+.card.B{border-left-color:#d29922}
+.card.A{border-left-color:#7d8590}
+.card.E{border-left-color:#e3b341}
 .card.EXH{border-left-color:#f0883e;background:linear-gradient(90deg,#2a1a10 0%,#121a2e 100%)}
 .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .sym{font-size:16px;font-weight:600}
-.badge{font-size:11px;padding:2px 8px;border-radius:4px;font-weight:800;}
-.badge.CATA{background:#00d26a;color:#000;}
-.badge.CATB{background:#d29922;color:#000;}
-.meta{font-size:11px;color:#8b949e;margin-bottom:6px}
+.price{font-size:14px;font-weight:600;margin-left:8px}
+.up{color:#3fb950}
+.down{color:#f85149}
+.badge{font-size:11px;padding:2px 8px;border-radius:4px;background:#21262d;font-weight:600}
+.badge.C1{background:#0d3a1f;color:#7ee787}
+.badge.C2{background:#0a2a14;color:#2ea043}
+.badge.D{background:#142a1a;color:#2ea043}
+.badge.B{background:#3a2f0f;color:#d29922}
+.badge.A{background:#2a2a2a;color:#7d8590}
+.badge.E{background:#3a2f0f;color:#e3b341}
+.badge.bull{background:#0d3a1a;color:#00d26a}
+.badge.bear{background:#3a0d0d;color:#f85149}
+.badge.EXH{background:#3a1f0f;color:#f0883e}
+.badge.CATA{background:#00d26a;color:#000;font-weight:800;}
+.badge.CATB{background:#d29922;color:#000;font-weight:800;}
+.meta{font-size:11px;color:#8b949e;margin-bottom:6px;line-height:1.5}
 .meta b{color:#c9d1d9}
 .levels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:12px;margin-top:6px}
 .lvl{background:#0a0f1e;padding:6px;border-radius:6px;text-align:center}
-.lvl .lbl{color:#7d8590;font-size:10px;text-transform:uppercase}
+.lvl .lbl{color:#7d8590;font-size:10px;text-transform:uppercase;letter-spacing:0.5px}
 .lvl .val{color:#e6edf3;font-weight:600;font-size:13px}
 .lvl.buy{background:#0d2a1a}
 .lvl.buy .val{color:#00d26a}
-.reason{font-size:11px;color:#7d8590;margin-top:8px;font-style:italic;}
+.reason{font-size:11px;color:#7d8590;margin-top:8px;font-style:italic;line-height:1.4}
+.empty{text-align:center;padding:40px 20px;color:#7d8590}
 .group{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 </style>
 </head>
 <body>
 <h1>PSX Signals</h1>
 <div class="sub" id="date">loading...</div>
-<input type="text" id="search" class="search" placeholder="Search symbol...">
+<input type="text" id="search" class="search" placeholder="Search symbol... (e.g. HBL)">
 
 <div class="main-title">Wyckoff (Swing Trade)</div>
 <div id="wyckoff-sections"></div>
@@ -53,6 +85,12 @@ h1{font-size:20px;margin-bottom:4px}
 <script>
 const URL_BASE="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/";
 const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
+const WYCKOFF_STAGES=[
+  {k:"C2",label:"STRONG BUY"},{k:"C1",label:"BUY"},{k:"D",label:"BUY-add"},{k:"B",label:"Watch"},{k:"A",label:"Wait"},{k:"E",label:"SELL"}
+];
+const DAY_STAGES=[
+  {k:"BULL",label:"BULLISH (BUY)"},{k:"BEAR",label:"BEARISH (AVOID)"}
+];
 let wyckoffData=[], daytradeData=[], exhaustionData=[];
 let openW={A:false,B:false,C1:false,C2:false,D:false,E:false};
 let openD={BULL:false,BEAR:false};
@@ -77,12 +115,45 @@ function exhaustionCard(s){
   return h;
 }
 
+function renderWyckoff(q){
+  const c=document.getElementById("wyckoff-sections");
+  let h="";
+  for(const st of WYCKOFF_STAGES){
+    let rows=wyckoffData.filter(x=>x.stage===st.k);
+    if(q) rows=rows.filter(x=>x.symbol.includes(q));
+    const zero=rows.length===0;
+    const isOpen=!zero && (openW[st.k] || (q && rows.length>0));
+    h+="<div class='group'><div class='sec-btn "+st.k+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleW(\""+st.k+"\")'>";
+    h+="<div class='left'><span class='letter'>"+st.k+"</span><span class='count'>"+rows.length+"</span></div>";
+    h+="<span class='act'>"+st.label+"</span></div>";
+    if(isOpen){ for(const r of rows) h+="<div class='card "+st.k+"'><div class='row1'><span class='sym'>"+r.symbol+"</span></div></div>"; }
+    h+="</div>";
+  }
+  c.innerHTML=h;
+}
+
+function renderDaytrade(q){
+  const c=document.getElementById("daytrade-sections");
+  let h="";
+  for(const st of DAY_STAGES){
+    let rows=daytradeData.filter(x=>st.k==="BULL"?x.direction==="bullish":x.direction==="bearish");
+    if(q) rows=rows.filter(x=>x.symbol.includes(q));
+    const zero=rows.length===0;
+    const isOpen=!zero && (openD[st.k] || (q && rows.length>0));
+    h+="<div class='group'><div class='sec-btn "+st.k+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleD(\""+st.k+"\")'>";
+    h+="<div class='left'><span class='letter'>"+(st.k==="BULL"?"UP":"DN")+"</span><span class='count'>"+rows.length+"</span></div>";
+    h+="<span class='act'>"+st.label+"</span></div>";
+    if(isOpen){ for(const r of rows) h+="<div class='card "+st.k+"'><div class='row1'><span class='sym'>"+r.symbol+"</span></div></div>"; }
+    h+="</div>";
+  }
+  c.innerHTML=h;
+}
+
 function renderExhaustion(q){
   const c=document.getElementById("exhaustion-sections");
   let h="";
   let rows = exhaustionData;
   if(q) rows = rows.filter(x=>x.symbol.includes(q));
-  
   rows.sort((a,b) => (a.category === "CAT A" ? -1 : 1));
   
   const zero = rows.length === 0;
@@ -91,23 +162,47 @@ function renderExhaustion(q){
   h+="<div class='group'><div class='sec-btn EXH"+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleE(\"EXH\")'>";
   h+="<div class='left'><span class='letter'>!</span><span class='count'>"+rows.length+"</span></div>";
   h+="<span class='act'>LIVE 3PM SIGNALS</span></div>";
-  
   if(isOpen){ for(const r of rows) h+=exhaustionCard(r); }
   h+="</div>";
   c.innerHTML=h;
 }
 
+function toggleW(k){ openW[k]=!openW[k]; renderAll(); }
+function toggleD(k){ openD[k]=!openD[k]; renderAll(); }
 function toggleE(k){ openE[k]=!openE[k]; renderAll(); }
+
 function renderAll(){
   const q=document.getElementById("search").value.trim().toUpperCase();
+  renderWyckoff(q);
+  renderDaytrade(q);
   renderExhaustion(q);
 }
+
 async function load(){
-  try{
-    const r3=await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json?t='+new Date().getTime());
-    if(r3.ok){ const liveData=await r3.json(); if(Array.isArray(liveData)){ exhaustionData=liveData; } }
-  }catch(e){ console.log("No data"); }
-  document.getElementById("date").textContent="Live: "+exhaustionData.length;
+  const h={apikey:KEY,Authorization:"Bearer "+KEY};
+  const [r1,r2]=await Promise.all([
+    fetch(URL_BASE+"wyckoff_signals?select=*",{headers:h}),
+    fetch(URL_BASE+"daytrade_signals?select=*",{headers:h})
+  ]);
+  const d1=await r1.json();
+  const d2=await r2.json();
+  const order={C2:0,C1:1,D:2,B:3,A:4,E:5};
+  d1.sort((a,b)=>order[a.stage]-order[b.stage]);
+  wyckoffData=d1; daytradeData=d2;
+  
+  try {
+      const r3 = await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json?t=' + new Date().getTime());
+      if(r3.ok) {
+          const liveData = await r3.json();
+          if (Array.isArray(liveData)) {
+              exhaustionData = liveData;
+          }
+      }
+  } catch(e) {
+      console.log("No live_scan.json found.");
+  }
+  
+  document.getElementById("date").textContent="Run: "+(d1[0]?d1[0].run_date:"no data")+" | Wyckoff: "+d1.length+" | Day: "+d2.length+" | Live: "+exhaustionData.length;
   renderAll();
   document.getElementById("search").addEventListener("input",renderAll);
 }
