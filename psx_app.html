@@ -340,7 +340,7 @@ function renderAll(){
 
 async function load(){
   // 5-second delay to guarantee Supabase responds
-  await new Promise(r => setTimeout(r, 5000));
+  
   
   const h={apikey:KEY,Authorization:"Bearer "+KEY};
   const [r1,r2]=await Promise.all([
@@ -373,3 +373,4 @@ load();
 </script>
 </body>
 </html>
+
