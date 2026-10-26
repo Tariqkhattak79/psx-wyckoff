@@ -29,7 +29,6 @@ h1{font-size:20px;margin-bottom:4px}
 .sec-btn.BEAR{border-left-color:#f85149}.sec-btn.BEAR .letter,.sec-btn.BEAR .act{color:#f85149}
 .sec-btn.open{background:#1a2338}
 .sec-btn.zero{opacity:0.5}
-/* NEW STYLES FOR EXHAUSTION TAB */
 .sec-btn.EXH{border-left-color:#f0883e}.sec-btn.EXH .letter,.sec-btn.EXH .act{color:#f0883e}
 .card{background:#121a2e;border-radius:10px;padding:14px;margin-bottom:8px;border-left:4px solid #7d8590}
 .card.C1{border-left-color:#7ee787}
@@ -59,6 +58,8 @@ h1{font-size:20px;margin-bottom:4px}
 .badge.bull{background:#0d3a1a;color:#00d26a}
 .badge.bear{background:#3a0d0d;color:#f85149}
 .badge.EXH{background:#3a1f0f;color:#f0883e}
+.badge.CATA{background:#d4af37;color:#1a1200;font-weight:800;}
+.badge.CATB{background:#3a2f0f;color:#d29922;font-weight:800;}
 .typebadge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;margin-top:6px;margin-right:6px;letter-spacing:0.5px}
 .typebadge.t1{background:#d4af37;color:#1a1200}
 .typebadge.t2{background:#c0c0c0;color:#111}
@@ -107,10 +108,6 @@ h1{font-size:20px;margin-bottom:4px}
 .empty{text-align:center;padding:40px 20px;color:#7d8590}
 .group{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 </style>
-<style>
-.badge.CATA{background:#d4af37;color:#1a1200;font-weight:800;}
-.badge.CATB{background:#3a2f0f;color:#d29922;font-weight:800;}
-</style>
 </head>
 <body>
 <h1>PSX Signals</h1>
@@ -123,7 +120,6 @@ h1{font-size:20px;margin-bottom:4px}
 <div class="main-title">Hougaard TFM (Day Trading)</div>
 <div id="daytrade-sections"></div>
 
-<!-- NEW EXHAUSTION TAB SECTION -->
 <div class="main-title">Exhaustion Setup (Live 3PM)</div>
 <div id="exhaustion-sections"></div>
 
@@ -139,7 +135,7 @@ const DAY_STAGES=[
 let wyckoffData=[], daytradeData=[], exhaustionData=[];
 let openW={A:false,B:false,C1:false,C2:false,D:false,E:false};
 let openD={BULL:false,BEAR:false};
-let openE={EXH:false}; // State for new tab
+let openE={EXH:false}; 
 
 function fmtVal(v){ if(!v) return "—"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
 
@@ -251,15 +247,13 @@ function daytradeCard(s){
   return h;
 }
 
-// NEW CARD FOR EXHAUSTION TAB
 function exhaustionCard(s){
   let h="<div class='card EXH'>";
   let catBadge = s.category === "CAT A" ? "<div class='badge CATA'>CAT A</div>" : "<div class='badge CATB'>CAT B</div>";
-h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span></div>"+catBadge+"</div>";
+  h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span></div>"+catBadge+"</div>";
   
   h+="<div class='meta'>";
   h+="<div>Yesterday Vol: <b>"+fmtVal(s.prev_vol)+"</b> | Today Vol: <b>"+fmtVal(s.today_vol)+"</b></div>";
-  // THIS LINE SHOWS THE DROP % AND THE DAYS
   h+="<div>Context: Dropped <b>"+(s.drop_pct||"?")+"%</b> over <b>"+(s.drop_days||"?")+"</b> days.</div>";
   h+="</div>";
 
@@ -307,7 +301,6 @@ function renderDaytrade(q){
   c.innerHTML=h;
 }
 
-// NEW RENDER FOR EXHAUSTION TAB
 function renderExhaustion(q){
   const c=document.getElementById("exhaustion-sections");
   let h="";
@@ -326,7 +319,6 @@ function renderExhaustion(q){
   if(isOpen){ 
       for(const r of rows) h+=exhaustionCard(r); 
   } else if (!zero) {
-      // Show a message if collapsed
       h+="<div class='empty'>Click to expand signals</div>";
   }
   h+="</div>";
@@ -356,19 +348,16 @@ async function load(){
   d1.sort((a,b)=>order[a.stage]-order[b.stage]);
   wyckoffData=d1; daytradeData=d2;
   
-  // Load live_scan.json from GitHub with cache busting
   try {
       const r3 = await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json?t=' + new Date().getTime());
       if(r3.ok) {
           const liveData = await r3.json();
           if (Array.isArray(liveData)) {
               exhaustionData = liveData;
-          } else {
-              console.log("live_scan.json is not an array yet.");
           }
       }
   } catch(e) {
-      console.log("No live_scan.json found on GitHub yet.");
+      console.log("No live_scan.json found.");
   }
   
   document.getElementById("date").textContent="Run: "+(d1[0]?d1[0].run_date:"no data")+" | Wyckoff: "+d1.length+" | Day: "+d2.length+" | Live: "+exhaustionData.length;
@@ -379,5 +368,3 @@ load();
 </script>
 </body>
 </html>
-
-
