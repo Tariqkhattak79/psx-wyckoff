@@ -34,15 +34,17 @@ def run_scan():
             days_since_high = len(df) - 1 - high_idx
 
             avg_vol20 = df['volume'].tail(20).mean()
-            
-            # LOOSENED CAT A RULES:
-            # Yesterday > 1.2x avg AND today < 60% of yesterday
             is_cat_a = (yesterday['volume'] > (avg_vol20 * 1.2)) and (today['volume'] < (yesterday['volume'] * 0.6))
             
             if prev_is_red and is_green and low_vol and is_downtrend:
                 entry = round(today['close'], 2)
-                stop = round(yesterday['low'] * 0.99, 2)
-                target = round(entry + ((entry - stop) * 2), 2)
+                
+                # THE FIX: Stop must be below entry. If yesterday's low is too high, force a 2% stop.
+                calculated_stop = round(yesterday['low'] * 0.99, 2)
+                stop = calculated_stop if calculated_stop < entry else round(entry * 0.98, 2)
+                
+                risk = entry - stop
+                target = round(entry + (risk * 2), 2)
                 
                 category = "CAT A" if is_cat_a else "CAT B"
                 
@@ -57,7 +59,6 @@ def run_scan():
                     "drop_days": int(days_since_high),
                     "category": category
                 })
-                print(f"[{category}] SIGNAL: {sym} (Drop {drop_pct:.1f}%)")
         except Exception: pass
 
     if os.path.exists("live_scan.json"): os.remove("live_scan.json")
