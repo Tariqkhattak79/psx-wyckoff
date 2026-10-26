@@ -39,7 +39,7 @@ def run_scan():
             if prev_is_red and is_green and low_vol and is_downtrend:
                 entry = round(today['close'], 2)
                 
-                # THE FIX: Stop must be below entry. If yesterday's low is too high, force a 2% stop.
+                # FIX: Stop must be BELOW entry
                 calculated_stop = round(yesterday['low'] * 0.99, 2)
                 stop = calculated_stop if calculated_stop < entry else round(entry * 0.98, 2)
                 
