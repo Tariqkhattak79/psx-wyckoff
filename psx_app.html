@@ -21,10 +21,9 @@ h1{font-size:20px;margin-bottom:4px}
 .card.EXH{border-left-color:#f0883e;background:linear-gradient(90deg,#2a1a10 0%,#121a2e 100%)}
 .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .sym{font-size:16px;font-weight:600}
-/* NEW BADGE COLORS */
 .badge{font-size:11px;padding:2px 8px;border-radius:4px;font-weight:800;}
-.badge.CATA{background:#00d26a;color:#000; box-shadow:0 0 5px #00d26a;} /* GREEN */
-.badge.CATB{background:#d29922;color:#000; box-shadow:0 0 5px #d29922;} /* YELLOW */
+.badge.CATA{background:#00d26a;color:#000;}
+.badge.CATB{background:#d29922;color:#000;}
 .meta{font-size:11px;color:#8b949e;margin-bottom:6px}
 .meta b{color:#c9d1d9}
 .levels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:12px;margin-top:6px}
@@ -42,18 +41,28 @@ h1{font-size:20px;margin-bottom:4px}
 <div class="sub" id="date">loading...</div>
 <input type="text" id="search" class="search" placeholder="Search symbol...">
 
+<div class="main-title">Wyckoff (Swing Trade)</div>
+<div id="wyckoff-sections"></div>
+
+<div class="main-title">Hougaard TFM (Day Trading)</div>
+<div id="daytrade-sections"></div>
+
 <div class="main-title">Exhaustion Setup (Live 3PM)</div>
 <div id="exhaustion-sections"></div>
 
 <script>
-let exhaustionData=[];
+const URL_BASE="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/";
+const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
+let wyckoffData=[], daytradeData=[], exhaustionData=[];
+let openW={A:false,B:false,C1:false,C2:false,D:false,E:false};
+let openD={BULL:false,BEAR:false};
+let openE={EXH:false}; 
+
 function fmtVal(v){ if(!v) return "—"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
+
 function exhaustionCard(s){
   let h="<div class='card EXH'>";
-  
-  // SWITCHED COLORS
   let catBadge = s.category === "CAT A" ? "<div class='badge CATA'>CAT A</div>" : "<div class='badge CATB'>CAT B</div>";
-  
   h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span></div>"+catBadge+"</div>";
   h+="<div class='meta'>";
   h+="<div>Yesterday Vol: <b>"+fmtVal(s.prev_vol)+"</b> | Today Vol: <b>"+fmtVal(s.today_vol)+"</b></div>";
@@ -67,22 +76,28 @@ function exhaustionCard(s){
   h+="<div class='reason'>Exhaustion Bounce: Green today on drastically lower volume after a major downtrend.</div></div>";
   return h;
 }
+
 function renderExhaustion(q){
   const c=document.getElementById("exhaustion-sections");
   let h="";
   let rows = exhaustionData;
   if(q) rows = rows.filter(x=>x.symbol.includes(q));
   
-  // SORT ON FRONTEND AS WELL (CAT A first)
   rows.sort((a,b) => (a.category === "CAT A" ? -1 : 1));
   
-  h+="<div class='group'><div class='sec-btn EXH' onclick='renderAll()'>";
+  const zero = rows.length === 0;
+  const isOpen = !zero && (openE["EXH"] || (q && rows.length > 0));
+  
+  h+="<div class='group'><div class='sec-btn EXH"+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleE(\"EXH\")'>";
   h+="<div class='left'><span class='letter'>!</span><span class='count'>"+rows.length+"</span></div>";
   h+="<span class='act'>LIVE 3PM SIGNALS</span></div>";
-  for(const r of rows) h+=exhaustionCard(r);
+  
+  if(isOpen){ for(const r of rows) h+=exhaustionCard(r); }
   h+="</div>";
   c.innerHTML=h;
 }
+
+function toggleE(k){ openE[k]=!openE[k]; renderAll(); }
 function renderAll(){
   const q=document.getElementById("search").value.trim().toUpperCase();
   renderExhaustion(q);
@@ -100,4 +115,3 @@ load();
 </script>
 </body>
 </html>
-
