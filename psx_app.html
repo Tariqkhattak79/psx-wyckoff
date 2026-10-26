@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PSX Signals</title>
+<meta name="theme-color" content="#0a0f1e">
+<title>PSX Exhaustion</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0f1e;color:#e6edf3;font-family:-apple-system,system-ui,sans-serif;padding:16px;max-width:640px;margin:0 auto}
@@ -11,29 +12,17 @@ h1{font-size:20px;margin-bottom:4px}
 .sub{color:#7d8590;font-size:13px;margin-bottom:12px}
 .search{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #21262d;background:#121a2e;color:#e6edf3;font-size:14px;margin-bottom:12px}
 .main-title{font-size:14px;color:#8b949e;margin:14px 0 8px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
-.sec-btn{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#121a2e;border-radius:8px;border:1px solid #21262d;cursor:pointer;font-weight:600;border-left:5px solid #30363d}
+.sec-btn{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#121a2e;border-radius:8px;border:1px solid #21262d;cursor:pointer;font-weight:600;border-left:5px solid #f0883e}
 .sec-btn .left{display:flex;align-items:center;gap:10px}
-.sec-btn .letter{font-size:18px;font-weight:700;width:28px;text-align:center}
+.sec-btn .letter{font-size:18px;font-weight:700;width:28px;text-align:center;color:#f0883e}
 .sec-btn .count{font-size:13px;color:#8b949e}
-.sec-btn .act{font-size:12px;text-transform:uppercase;font-weight:700}
-.sec-btn.A{border-left-color:#7d8590}.sec-btn.A .act{color:#7d8590}
-.sec-btn.B{border-left-color:#d29922}.sec-btn.B .act{color:#d29922}
-.sec-btn.C1{border-left-color:#7ee787}.sec-btn.C1 .act{color:#7ee787}
-.sec-btn.C2{border-left-color:#2ea043}.sec-btn.C2 .act{color:#2ea043}
-.sec-btn.D{border-left-color:#2ea043}.sec-btn.D .act{color:#2ea043}
-.sec-btn.E{border-left-color:#e3b341}.sec-btn.E .act{color:#e3b341}
-.sec-btn.BULL{border-left-color:#00d26a}.sec-btn.BULL .act{color:#00d26a}
-.sec-btn.BEAR{border-left-color:#f85149}.sec-btn.BEAR .act{color:#f85149}
-.sec-btn.EXH{border-left-color:#f0883e}.sec-btn.EXH .act{color:#f0883e}
-.sec-btn.open{background:#1a2338}
-.sec-btn.zero{opacity:0.5}
-.card{background:#121a2e;border-radius:10px;padding:14px;margin-bottom:8px;border-left:4px solid #7d8590}
-.card.EXH{border-left-color:#f0883e;background:linear-gradient(90deg,#2a1a10 0%,#121a2e 100%)}
+.sec-btn .act{font-size:12px;text-transform:uppercase;font-weight:700;color:#f0883e}
+.card{background:#121a2e;border-radius:10px;padding:14px;margin-bottom:8px;border-left:4px solid #f0883e;background:linear-gradient(90deg,#2a1a10 0%,#121a2e 100%)}
 .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .sym{font-size:16px;font-weight:600}
-.badge{font-size:11px;padding:2px 8px;border-radius:4px;background:#21262d;font-weight:600}
-.badge.CATA{background:#d4af37;color:#1a1200;font-weight:800;}
-.badge.CATB{background:#3a2f0f;color:#d29922;font-weight:800;}
+.badge{font-size:11px;padding:2px 8px;border-radius:4px;font-weight:800;}
+.badge.CATA{background:#00d26a;color:#000;}
+.badge.CATB{background:#d29922;color:#000;}
 .meta{font-size:11px;color:#8b949e;margin-bottom:6px}
 .meta b{color:#c9d1d9}
 .levels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:12px;margin-top:6px}
@@ -43,27 +32,22 @@ h1{font-size:20px;margin-bottom:4px}
 .lvl.buy{background:#0d2a1a}
 .lvl.buy .val{color:#00d26a}
 .reason{font-size:11px;color:#7d8590;margin-top:8px;font-style:italic;}
-.empty{text-align:center;padding:40px 20px;color:#7d8590}
-.group{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 </style>
 </head>
 <body>
-<h1>PSX Signals</h1>
+<h1>PSX Exhaustion</h1>
 <div class="sub" id="date">loading...</div>
 <input type="text" id="search" class="search" placeholder="Search symbol...">
-<div class="main-title">Wyckoff (Swing Trade)</div>
-<div id="wyckoff-sections"></div>
-<div class="main-title">Hougaard TFM (Day Trading)</div>
-<div id="daytrade-sections"></div>
+
 <div class="main-title">Exhaustion Setup (Live 3PM)</div>
 <div id="exhaustion-sections"></div>
+
 <script>
-const URL_BASE="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/";
-const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
-let wyckoffData=[], daytradeData=[], exhaustionData=[];
+let exhaustionData=[];
 function fmtVal(v){ if(!v) return "—"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
+
 function exhaustionCard(s){
-  let h="<div class='card EXH'>";
+  let h="<div class='card'>";
   let catBadge = s.category === "CAT A" ? "<div class='badge CATA'>CAT A</div>" : "<div class='badge CATB'>CAT B</div>";
   h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span></div>"+catBadge+"</div>";
   h+="<div class='meta'>";
@@ -78,23 +62,27 @@ function exhaustionCard(s){
   h+="<div class='reason'>Exhaustion Bounce: Green today on drastically lower volume after a major downtrend.</div></div>";
   return h;
 }
+
 function renderExhaustion(q){
   const c=document.getElementById("exhaustion-sections");
   let h="";
   let rows = exhaustionData;
   if(q) rows = rows.filter(x=>x.symbol.includes(q));
+  
+  rows.sort((a,b) => (a.category === "CAT A" ? -1 : 1));
+  
   const zero = rows.length === 0;
-  h+="<div class='group'><div class='sec-btn EXH' onclick='renderAll()'>";
-  h+="<div class='left'><span class='letter'>!</span><span class='count'>"+rows.length+"</span></div>";
-  h+="<span class='act'>LIVE 3PM SIGNALS</span></div>";
+  h+="<div class='group'><div class='sec-btn'><div class='left'><span class='letter'>!</span><span class='count'>"+rows.length+"</span></div><span class='act'>LIVE 3PM SIGNALS</span></div>";
   if(!zero){ for(const r of rows) h+=exhaustionCard(r); }
   h+="</div>";
   c.innerHTML=h;
 }
+
 function renderAll(){
   const q=document.getElementById("search").value.trim().toUpperCase();
   renderExhaustion(q);
 }
+
 async function load(){
   try{
     const r3=await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json?t='+new Date().getTime());
@@ -108,4 +96,3 @@ load();
 </script>
 </body>
 </html>
-
