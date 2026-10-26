@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -58,8 +58,8 @@ h1{font-size:20px;margin-bottom:4px}
 .badge.bull{background:#0d3a1a;color:#00d26a}
 .badge.bear{background:#3a0d0d;color:#f85149}
 .badge.EXH{background:#3a1f0f;color:#f0883e}
-.badge.CATA{background:#00d26a;color:#000;font-weight:800;}
-.badge.CATB{background:#d29922;color:#000;font-weight:800;}
+.badge.CATA{background:#d4af37;color:#1a1200;font-weight:800;}
+.badge.CATB{background:#3a2f0f;color:#d29922;font-weight:800;}
 .typebadge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;margin-top:6px;margin-right:6px;letter-spacing:0.5px}
 .typebadge.t1{background:#d4af37;color:#1a1200}
 .typebadge.t2{background:#c0c0c0;color:#111}
@@ -308,8 +308,6 @@ function renderExhaustion(q){
   
   let rows = exhaustionData;
   if(q) rows = rows.filter(x=>x.symbol.includes(q));
-  
-  rows.sort((a,b) => (a.category === "CAT A" ? -1 : 1));
   
   const zero = rows.length === 0;
   const isOpen = !zero && (openE["EXH"] || (q && rows.length > 0));
