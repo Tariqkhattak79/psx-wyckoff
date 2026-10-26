@@ -107,6 +107,10 @@ h1{font-size:20px;margin-bottom:4px}
 .empty{text-align:center;padding:40px 20px;color:#7d8590}
 .group{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 </style>
+<style>
+.badge.CATA{background:#d4af37;color:#1a1200;font-weight:800;}
+.badge.CATB{background:#3a2f0f;color:#d29922;font-weight:800;}
+</style>
 </head>
 <body>
 <h1>PSX Signals</h1>
@@ -250,7 +254,8 @@ function daytradeCard(s){
 // NEW CARD FOR EXHAUSTION TAB
 function exhaustionCard(s){
   let h="<div class='card EXH'>";
-  h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span></div><div class='badge EXH'>LIVE</div></div>";
+  let catBadge = s.category === "CAT A" ? "<div class='badge CATA'>CAT A</div>" : "<div class='badge CATB'>CAT B</div>";
+h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span></div>"+catBadge+"</div>";
   
   h+="<div class='meta'>";
   h+="<div>Yesterday Vol: <b>"+fmtVal(s.prev_vol)+"</b> | Today Vol: <b>"+fmtVal(s.today_vol)+"</b></div>";
@@ -374,4 +379,5 @@ load();
 </script>
 </body>
 </html>
+
 
