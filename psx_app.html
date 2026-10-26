@@ -32,8 +32,8 @@ h1{font-size:20px;margin-bottom:4px}
 .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .sym{font-size:16px;font-weight:600}
 .badge{font-size:11px;padding:2px 8px;border-radius:4px;background:#21262d;font-weight:600}
-.badge.CATA{background:#d4af37;color:#1a1200;font-weight:800;}
-.badge.CATB{background:#3a2f0f;color:#d29922;font-weight:800;}
+.badge.CATA{background:#00d26a;color:#000;font-weight:800;}
+.badge.CATB{background:#d29922;color:#000;font-weight:800;}
 .meta{font-size:11px;color:#8b949e;margin-bottom:6px}
 .meta b{color:#c9d1d9}
 .levels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:12px;margin-top:6px}
@@ -51,17 +51,52 @@ h1{font-size:20px;margin-bottom:4px}
 <h1>PSX Signals</h1>
 <div class="sub" id="date">loading...</div>
 <input type="text" id="search" class="search" placeholder="Search symbol...">
+
 <div class="main-title">Wyckoff (Swing Trade)</div>
 <div id="wyckoff-sections"></div>
+
 <div class="main-title">Hougaard TFM (Day Trading)</div>
 <div id="daytrade-sections"></div>
+
 <div class="main-title">Exhaustion Setup (Live 3PM)</div>
 <div id="exhaustion-sections"></div>
+
 <script>
 const URL_BASE="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/";
 const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
 let wyckoffData=[], daytradeData=[], exhaustionData=[];
+
 function fmtVal(v){ if(!v) return "—"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
+
+// --- WYCKOFF CARD ---
+function wyckoffCard(s){
+  let h="<div class='card C2'>";
+  h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span></div><div class='badge'>"+s.stage+"</div></div>";
+  h+="<div class='meta'><b>"+s.action+"</b></div>";
+  h+="<div class='levels'>";
+  h+="<div class='lvl'><div class='lbl'>Entry</div><div class='val'>"+(s.entry||"—")+"</div></div>";
+  h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+(s.stop||"—")+"</div></div>";
+  h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
+  h+="</div>";
+  h+="<div class='reason'>"+s.reason+"</div></div>";
+  return h;
+}
+
+// --- DAYTRADE CARD ---
+function daytradeCard(s){
+  let h="<div class='card'>";
+  h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span></div><div class='badge'>"+s.direction+"</div></div>";
+  h+="<div class='meta'><b>Grade "+s.quality+"</b></div>";
+  h+="<div class='levels'>";
+  h+="<div class='lvl'><div class='lbl'>Entry</div><div class='val'>"+s.entry+"</div></div>";
+  h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
+  h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+s.target+"</div></div>";
+  h+="</div>";
+  h+="<div class='reason'>"+s.reason+"</div></div>";
+  return h;
+}
+
+// --- EXHAUSTION CARD ---
 function exhaustionCard(s){
   let h="<div class='card EXH'>";
   let catBadge = s.category === "CAT A" ? "<div class='badge CATA'>CAT A</div>" : "<div class='badge CATB'>CAT B</div>";
@@ -78,29 +113,75 @@ function exhaustionCard(s){
   h+="<div class='reason'>Exhaustion Bounce: Green today on drastically lower volume after a major downtrend.</div></div>";
   return h;
 }
+
+// --- RENDER FUNCTIONS ---
+function renderWyckoff(q){
+  const c=document.getElementById("wyckoff-sections");
+  let h="";
+  let rows=wyckoffData;
+  if(q) rows=rows.filter(x=>x.symbol.includes(q));
+  if(rows.length===0){ c.innerHTML="<div class='empty'>No Wyckoff signals</div>"; return; }
+  h+="<div class='group'>";
+  for(const r of rows) h+=wyckoffCard(r);
+  h+="</div>";
+  c.innerHTML=h;
+}
+
+function renderDaytrade(q){
+  const c=document.getElementById("daytrade-sections");
+  let h="";
+  let rows=daytradeData;
+  if(q) rows=rows.filter(x=>x.symbol.includes(q));
+  if(rows.length===0){ c.innerHTML="<div class='empty'>No Hougaard signals</div>"; return; }
+  h+="<div class='group'>";
+  for(const r of rows) h+=daytradeCard(r);
+  h+="</div>";
+  c.innerHTML=h;
+}
+
 function renderExhaustion(q){
   const c=document.getElementById("exhaustion-sections");
   let h="";
   let rows = exhaustionData;
   if(q) rows = rows.filter(x=>x.symbol.includes(q));
-  const zero = rows.length === 0;
-  h+="<div class='group'><div class='sec-btn EXH' onclick='renderAll()'>";
+  rows.sort((a,b) => (a.category === "CAT A" ? -1 : 1));
+  if(rows.length===0){ c.innerHTML="<div class='empty'>No Exhaustion signals</div>"; return; }
+  h+="<div class='group'><div class='sec-btn EXH'>";
   h+="<div class='left'><span class='letter'>!</span><span class='count'>"+rows.length+"</span></div>";
   h+="<span class='act'>LIVE 3PM SIGNALS</span></div>";
-  if(!zero){ for(const r of rows) h+=exhaustionCard(r); }
+  for(const r of rows) h+=exhaustionCard(r);
   h+="</div>";
   c.innerHTML=h;
 }
+
 function renderAll(){
   const q=document.getElementById("search").value.trim().toUpperCase();
+  renderWyckoff(q);
+  renderDaytrade(q);
   renderExhaustion(q);
 }
+
 async function load(){
-  try{
-    const r3=await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json?t='+new Date().getTime());
-    if(r3.ok){ const liveData=await r3.json(); if(Array.isArray(liveData)){ exhaustionData=liveData; } }
-  }catch(e){ console.log("No data"); }
-  document.getElementById("date").textContent="Live: "+exhaustionData.length;
+  const h={apikey:KEY,Authorization:"Bearer "+KEY};
+  try {
+    const [r1,r2]=await Promise.all([
+      fetch(URL_BASE+"wyckoff_signals?select=*",{headers:h}),
+      fetch(URL_BASE+"daytrade_signals?select=*",{headers:h})
+    ]);
+    const d1=await r1.json();
+    const d2=await r2.json();
+    wyckoffData=d1; daytradeData=d2;
+  } catch(e) { console.log("Supabase error", e); }
+  
+  try {
+    const r3 = await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json?t=' + new Date().getTime());
+    if(r3.ok) {
+      const liveData = await r3.json();
+      if (Array.isArray(liveData)) { exhaustionData = liveData; }
+    }
+  } catch(e) { console.log("JSON error", e); }
+  
+  document.getElementById("date").textContent="Wyckoff: "+wyckoffData.length+" | Day: "+daytradeData.length+" | Live: "+exhaustionData.length;
   renderAll();
   document.getElementById("search").addEventListener("input",renderAll);
 }
@@ -108,4 +189,3 @@ load();
 </script>
 </body>
 </html>
-
