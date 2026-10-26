@@ -95,7 +95,7 @@ function renderAll(){
   const q=document.getElementById("search").value.trim().toUpperCase();
   renderExhaustion(q);
 }
-async function load(){
+async function load(){ await new Promise(r => setTimeout(r, 500));
   try{
     const r3=await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json?t='+new Date().getTime());
     if(r3.ok){ const liveData=await r3.json(); if(Array.isArray(liveData)){ exhaustionData=liveData; } }
@@ -108,3 +108,4 @@ load();
 </script>
 </body>
 </html>
+
