@@ -38,14 +38,11 @@ def run_scan():
             
             if prev_is_red and is_green and low_vol and is_downtrend:
                 entry = round(today['close'], 2)
-                
-                # FIX: Stop must be BELOW entry
                 calculated_stop = round(yesterday['low'] * 0.99, 2)
                 stop = calculated_stop if calculated_stop < entry else round(entry * 0.98, 2)
                 
                 risk = entry - stop
                 target = round(entry + (risk * 2), 2)
-                
                 category = "CAT A" if is_cat_a else "CAT B"
                 
                 results.append({
@@ -60,6 +57,9 @@ def run_scan():
                     "category": category
                 })
         except Exception: pass
+
+    # SORT CAT A TO THE TOP
+    results.sort(key=lambda x: (x['category'] != 'CAT A', -x['drop_pct']))
 
     if os.path.exists("live_scan.json"): os.remove("live_scan.json")
     with open("live_scan.json", "w") as f: json.dump(results, f, indent=4)
