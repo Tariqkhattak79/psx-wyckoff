@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0a0f1e">
 <title>PSX Signals</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -11,100 +10,39 @@ body{background:#0a0f1e;color:#e6edf3;font-family:-apple-system,system-ui,sans-s
 h1{font-size:20px;margin-bottom:4px}
 .sub{color:#7d8590;font-size:13px;margin-bottom:12px}
 .search{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #21262d;background:#121a2e;color:#e6edf3;font-size:14px;margin-bottom:12px}
-.search:focus{outline:none;border-color:#58a6ff}
 .main-title{font-size:14px;color:#8b949e;margin:14px 0 8px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
-.sec-btn{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#121a2e;border-radius:8px;border:1px solid #21262d;cursor:pointer;user-select:none;font-weight:600;border-left:5px solid #30363d}
-.sec-btn:active{transform:scale(0.99)}
+.sec-btn{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#121a2e;border-radius:8px;border:1px solid #21262d;cursor:pointer;font-weight:600;border-left:5px solid #30363d}
 .sec-btn .left{display:flex;align-items:center;gap:10px}
 .sec-btn .letter{font-size:18px;font-weight:700;width:28px;text-align:center}
 .sec-btn .count{font-size:13px;color:#8b949e}
-.sec-btn .act{font-size:12px;text-transform:uppercase;letter-spacing:0.5px;font-weight:700}
-.sec-btn.A{border-left-color:#7d8590}.sec-btn.A .letter,.sec-btn.A .act{color:#7d8590}
-.sec-btn.B{border-left-color:#d29922}.sec-btn.B .letter,.sec-btn.B .act{color:#d29922}
-.sec-btn.C1{border-left-color:#7ee787}.sec-btn.C1 .letter,.sec-btn.C1 .act{color:#7ee787}
-.sec-btn.C2{border-left-color:#2ea043}.sec-btn.C2 .letter,.sec-btn.C2 .act{color:#2ea043}
-.sec-btn.D{border-left-color:#2ea043}.sec-btn.D .letter,.sec-btn.D .act{color:#2ea043}
-.sec-btn.E{border-left-color:#e3b341}.sec-btn.E .letter,.sec-btn.E .act{color:#e3b341}
-.sec-btn.BULL{border-left-color:#00d26a}.sec-btn.BULL .letter,.sec-btn.BULL .act{color:#00d26a}
-.sec-btn.BEAR{border-left-color:#f85149}.sec-btn.BEAR .letter,.sec-btn.BEAR .act{color:#f85149}
+.sec-btn .act{font-size:12px;text-transform:uppercase;font-weight:700}
+.sec-btn.A{border-left-color:#7d8590}.sec-btn.A .act{color:#7d8590}
+.sec-btn.B{border-left-color:#d29922}.sec-btn.B .act{color:#d29922}
+.sec-btn.C1{border-left-color:#7ee787}.sec-btn.C1 .act{color:#7ee787}
+.sec-btn.C2{border-left-color:#2ea043}.sec-btn.C2 .act{color:#2ea043}
+.sec-btn.D{border-left-color:#2ea043}.sec-btn.D .act{color:#2ea043}
+.sec-btn.E{border-left-color:#e3b341}.sec-btn.E .act{color:#e3b341}
+.sec-btn.BULL{border-left-color:#00d26a}.sec-btn.BULL .act{color:#00d26a}
+.sec-btn.BEAR{border-left-color:#f85149}.sec-btn.BEAR .act{color:#f85149}
+.sec-btn.EXH{border-left-color:#f0883e}.sec-btn.EXH .act{color:#f0883e}
 .sec-btn.open{background:#1a2338}
 .sec-btn.zero{opacity:0.5}
-.sec-btn.EXH{border-left-color:#f0883e}.sec-btn.EXH .letter,.sec-btn.EXH .act{color:#f0883e}
 .card{background:#121a2e;border-radius:10px;padding:14px;margin-bottom:8px;border-left:4px solid #7d8590}
-.card.C1{border-left-color:#7ee787}
-.card.C2{border-left-color:#2ea043}
-.card.D{border-left-color:#2ea043}
-.card.B{border-left-color:#d29922}
-.card.A{border-left-color:#7d8590}
-.card.E{border-left-color:#e3b341}
 .card.EXH{border-left-color:#f0883e;background:linear-gradient(90deg,#2a1a10 0%,#121a2e 100%)}
-.card.t1{background:linear-gradient(90deg,#2a1f05 0%,#121a2e 100%);border-left:5px solid #d4af37}
-.card.t2{background:linear-gradient(90deg,#1e2228 0%,#121a2e 100%);border-left:5px solid #c0c0c0}
-.card.t3{background:linear-gradient(90deg,#2a1a10 0%,#121a2e 100%);border-left:5px solid #cd7f32}
-.card.bull{border-left-color:#00d26a;background:linear-gradient(90deg,#0d1f14 0%,#121a2e 100%)}
-.card.bear{border-left-color:#f85149;background:linear-gradient(90deg,#1f0d0d 0%,#121a2e 100%)}
 .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .sym{font-size:16px;font-weight:600}
-.price{font-size:14px;font-weight:600;margin-left:8px}
-.up{color:#3fb950}
-.down{color:#f85149}
 .badge{font-size:11px;padding:2px 8px;border-radius:4px;background:#21262d;font-weight:600}
-.badge.C1{background:#0d3a1f;color:#7ee787}
-.badge.C2{background:#0a2a14;color:#2ea043}
-.badge.D{background:#142a1a;color:#2ea043}
-.badge.B{background:#3a2f0f;color:#d29922}
-.badge.A{background:#2a2a2a;color:#7d8590}
-.badge.E{background:#3a2f0f;color:#e3b341}
-.badge.bull{background:#0d3a1a;color:#00d26a}
-.badge.bear{background:#3a0d0d;color:#f85149}
-.badge.EXH{background:#3a1f0f;color:#f0883e}
 .badge.CATA{background:#d4af37;color:#1a1200;font-weight:800;}
 .badge.CATB{background:#3a2f0f;color:#d29922;font-weight:800;}
-.typebadge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;margin-top:6px;margin-right:6px;letter-spacing:0.5px}
-.typebadge.t1{background:#d4af37;color:#1a1200}
-.typebadge.t2{background:#c0c0c0;color:#111}
-.typebadge.t3{background:#cd7f32;color:#1a0d00}
-.statusbadge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:1px;margin-top:6px;margin-right:6px}
-.statusbadge.FRESH{background:#3a2f0f;color:#e3b341}
-.statusbadge.VALID{background:#0d3a1f;color:#3fb950}
-.statusbadge.LATE{background:#3a1f0f;color:#f0883e}
-.statusbadge.FAILED{background:#3a0d0d;color:#f85149}
-.meta{font-size:11px;color:#8b949e;margin-bottom:6px;line-height:1.5}
+.meta{font-size:11px;color:#8b949e;margin-bottom:6px}
 .meta b{color:#c9d1d9}
-.liq{font-size:11px;color:#6e7681;margin-bottom:6px}
-.action{font-size:13px;color:#c9d1d9;margin-bottom:8px;font-weight:500}
-.buyon{font-size:12px;color:#00d26a;font-weight:700;margin-bottom:6px}
-.buyon.bear{color:#f85149}
 .levels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:12px;margin-top:6px}
 .lvl{background:#0a0f1e;padding:6px;border-radius:6px;text-align:center}
-.lvl .lbl{color:#7d8590;font-size:10px;text-transform:uppercase;letter-spacing:0.5px}
+.lvl .lbl{color:#7d8590;font-size:10px;text-transform:uppercase}
 .lvl .val{color:#e6edf3;font-weight:600;font-size:13px}
-.lvl .gap{font-size:10px;margin-top:2px;font-weight:600}
 .lvl.buy{background:#0d2a1a}
 .lvl.buy .val{color:#00d26a}
-.lvl.full{background:#0d3a1f;border:1px solid #3fb950}
-.lvl.full .lbl{color:#7ee787}
-.lvl.full .val{color:#3fb950;font-size:15px}
-.lvl.half{background:#3a2f0f;border:1px solid #d29922}
-.lvl.half .lbl{color:#e3b341}
-.lvl.half .val{color:#e3b341;font-size:15px}
-.lvl.quarter{background:#0d1f3a;border:1px solid #58a6ff}
-.lvl.quarter .lbl{color:#79c0ff}
-.lvl.quarter .val{color:#58a6ff;font-size:15px}
-.levels3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:8px}
-.rr{display:inline-block;padding:3px 8px;border-radius:4px;background:#0d2a1a;color:#00d26a;font-size:11px;font-weight:700;margin-top:6px}
-.rr.bear{background:#2a0d0d;color:#f85149}
-.reason{font-size:11px;color:#7d8590;margin-top:8px;font-style:italic;line-height:1.4}
-.qbadge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;margin-top:6px;margin-right:6px;letter-spacing:0.5px}.qbadge.qy{background:#0d3a1f;color:#3fb950;border:1px solid #2ea043}.qbadge.qn{background:#3a0d0d;color:#f85149;border:1px solid #da3633}.qa,.qb,.qc{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:800;margin-top:6px;margin-right:6px;letter-spacing:1px}
-.qa.qbull{background:#0d3a1f;color:#3fb950;border:1px solid #3fb950}
-.qa.qbear{background:#3a0d0d;color:#f85149;border:1px solid #f85149}
-.qb.qbull{background:#0d2a1a;color:#2ea043;border:1px solid #2ea043}
-.qb.qbear{background:#2a0d0d;color:#da3633;border:1px solid #da3633}
-.qc.qbull{background:#0d1f14;color:#7d8590;border:1px solid #30363d}
-.qc.qbear{background:#1f0d0d;color:#7d8590;border:1px solid #30363d}
-.qflag{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;margin-top:6px;margin-right:6px;letter-spacing:0.5px}
-.qflag.qfyes{background:#0d2a1a;color:#3fb950;border:1px solid #2ea043}
-.qflag.qfno{background:#2a0d0d;color:#f85149;border:1px solid #da3633}
+.reason{font-size:11px;color:#7d8590;margin-top:8px;font-style:italic;}
 .empty{text-align:center;padding:40px 20px;color:#7d8590}
 .group{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 </style>
@@ -112,255 +50,57 @@ h1{font-size:20px;margin-bottom:4px}
 <body>
 <h1>PSX Signals</h1>
 <div class="sub" id="date">loading...</div>
-<input type="text" id="search" class="search" placeholder="Search symbol... (e.g. HBL)">
-
+<input type="text" id="search" class="search" placeholder="Search symbol...">
 <div class="main-title">Wyckoff (Swing Trade)</div>
 <div id="wyckoff-sections"></div>
-
 <div class="main-title">Hougaard TFM (Day Trading)</div>
 <div id="daytrade-sections"></div>
-
 <div class="main-title">Exhaustion Setup (Live 3PM)</div>
 <div id="exhaustion-sections"></div>
-
 <script>
 const URL_BASE="https://lmuwpfejzzfsagkjddui.supabase.co/rest/v1/";
 const KEY="sb_publishable_qa_DZT1u5UyeGKA3U_UG2A_1Xg1rC34";
-const WYCKOFF_STAGES=[
-  {k:"C2",label:"STRONG BUY"},{k:"C1",label:"BUY"},{k:"D",label:"BUY-add"},{k:"B",label:"Watch"},{k:"A",label:"Wait"},{k:"E",label:"SELL"}
-];
-const DAY_STAGES=[
-  {k:"BULL",label:"BULLISH (BUY)"},{k:"BEAR",label:"BEARISH (AVOID)"}
-];
 let wyckoffData=[], daytradeData=[], exhaustionData=[];
-let openW={A:false,B:false,C1:false,C2:false,D:false,E:false};
-let openD={BULL:false,BEAR:false};
-let openE={EXH:false}; 
-
 function fmtVal(v){ if(!v) return "—"; if(v>=1e6) return (v/1e6).toFixed(1)+"M"; if(v>=1e3) return (v/1e3).toFixed(0)+"K"; return v; }
-
-function typeClass(reason){
-  if(!reason) return "";
-  if(reason.indexOf("Type1")===0) return " t1";
-  if(reason.indexOf("Type2")===0) return " t2";
-  if(reason.indexOf("Type3")===0) return " t3";
-  return "";
-}
-
-function trendBadge(s){
-  if(s.stage!=="C1" && s.stage!=="C2") return "";
-  var t = s.trend_ok ? "<span class='qbadge qy'>TREND OK</span>" : "<span class='qbadge qn'>TREND DOWN</span>";
-  var te = s.test_ok===true ? "<span class='qbadge qy'>TEST OK</span>" : (s.test_ok===false ? "<span class='qbadge qn'>NO TEST</span>" : "");
-  return "<div>"+t+te+"</div>";
-}
-function statusBadge(s){
-  if(s.stage!=="C2" || !s.status) return "";
-  const lbl=s.status+(s.days_since_spring!==undefined?" — "+s.days_since_spring+"d":"");
-  return "<div><span class='statusbadge "+s.status+"'>"+lbl+"</span></div>";
-}
-
-function gapSpan(v){
-  if(v===null||v===undefined) return "";
-  const cls = v>=0?"down":"up";
-  const sign = v>=0?"+":"";
-  return "<div class='gap "+cls+"'>"+sign+v+"%</div>";
-}
-
-function wyckoffCard(s){
-  let pc="";
-  if(s.change_pct!==null && s.change_pct!==undefined){
-    const cls=s.change_pct>=0?"up":"down";
-    const sign=s.change_pct>=0?"+":"";
-    pc="<span class='price "+cls+"'>"+s.last_close+" ("+sign+s.change_pct+"%)</span>";
-  } else if(s.last_close){ pc="<span class='price'>"+s.last_close+"</span>"; }
-  let meta="";
-  if(s.sc_date) meta+="<div>SC: <b>"+s.sc_date+"</b> ("+s.sc_age+"d ago) @ <b>"+s.sc_price+"</b></div>";
-  if(s.range_low && s.range_high){
-    const pct=s.range_pct?" ("+s.range_pct+"%)":"";
-    meta+="<div>Range: <b>"+s.range_low+"</b> to <b>"+s.range_high+"</b>"+pct+"</div>";
-  }
-  let liq="";
-  if(s.avg_volume) liq="Avg vol: "+fmtVal(s.avg_volume)+" sh | PKR "+fmtVal(s.avg_value_pkr)+"/day";
-  const tc=typeClass(s.reason);
-  let h="<div class='card "+s.stage+tc+"'>";
-  h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span>"+pc+"</div><div class='badge "+s.stage+"'>"+s.stage+"</div></div>";
-  if(meta) h+="<div class='meta'>"+meta+"</div>";
-  if(liq) h+="<div class='liq'>"+liq+"</div>";
-  h+="<div class='action'>"+s.action+"</div>";
-  if(s.stage==="C2" && s.entry_aggressive){
-    h+="<div class='levels3'>";
-    h+="<div class='lvl full'><div class='lbl'>FULL</div><div class='val'>"+s.entry_aggressive_lo+" – "+s.entry_aggressive_hi+"</div>"+(s.entry_gap_pct!==undefined?gapSpan(s.entry_gap_pct):"")+"</div>";
-    h+="<div class='lvl half'><div class='lbl'>HALF</div><div class='val'>"+s.entry_balanced_lo+" – "+s.entry_balanced_hi+"</div></div>";
-    h+="<div class='lvl quarter'><div class='lbl'>QUARTER</div><div class='val'>"+s.entry_conservative_lo+" – "+s.entry_conservative_hi+"</div></div>";
-    h+="</div>";
-    h+="<div class='levels' style='margin-top:6px'>";
-    h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
-    h+="<div class='lvl'><div class='lbl'>Spring</div><div class='val'>"+s.spring_date+"</div></div>";
-    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
-    h+="</div>";
-  } else if(s.entry){
-    h+="<div class='levels'>";
-    h+="<div class='lvl'><div class='lbl'>Entry</div><div class='val'>"+s.entry+"</div></div>";
-    h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
-    h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+(s.target||"—")+"</div></div>";
-    h+="</div>";
-  }
-  h+=statusBadge(s); h+=trendBadge(s);
-  if(tc){
-    const tp=tc.trim().toUpperCase();
-    h+="<span class='typebadge "+tc.trim()+"'>"+tp+"</span>";
-  }
-  h+="<div class='reason'>"+s.reason+"</div></div>";
-  return h;
-}
-
-function daytradeCard(s){
-  const isBull=s.direction==="bullish";
-  const cls=isBull?"bull":"bear";
-  const icon=isBull?"[UP]":"[DN]";
-  let h="<div class='card "+cls+"'>";
-  h+="<div class='row1'><div><span class='sym'>"+icon+" "+s.symbol+"</span><span class='price'>"+s.last_close+"</span></div><div class='badge "+cls+"'>"+s.pair+"</div></div>";
-  if(s.buy_on) h+="<div class='buyon"+(isBull?"":" bear")+"'>"+(isBull?"BUY ON: ":"EXIT BY: ")+s.buy_on+"</div>";
-  if(s.quality){
-    var qcls = s.quality==="A"?"qa":(s.quality==="B"?"qb":"qc");
-    var qdir = isBull?"qbull":"qbear";
-    h+="<div><span class='"+(qcls+" "+qdir)+"'>GRADE "+s.quality+"</span>";
-    var trendIcon = s.trend_ok ? "&#10003;" : "&#10007;";
-    var volIcon = s.vol_ok ? "&#10003;" : "&#10007;";
-    var gapIcon = s.gap_ok ? "&#10003;" : "&#10007;";
-    var trendCls = s.trend_ok ? "qfyes" : "qfno";
-    var volCls = s.vol_ok ? "qfyes" : "qfno";
-    var gapCls = s.gap_ok ? "qfyes" : "qfno";
-    h+="<span class='qflag "+trendCls+"'>TREND "+trendIcon+"</span>";
-    h+="<span class='qflag "+volCls+"'>VOL "+volIcon+"</span>";
-    h+="<span class='qflag "+gapCls+"'>GAP "+gapIcon+"</span>";
-    h+="</div>";
-  }
-  h+="<div class='levels'>";
-  h+="<div class='lvl buy'><div class='lbl'>"+(isBull?"BUY AT":"SELLAT")+"</div><div class='val'>"+s.entry+"</div></div>";
-  h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
-  h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+s.target+"</div></div>";
-  h+="</div>";
-  h+="<div><span class='rr"+(isBull?"":" bear")+"'>R:R "+s.rr+"</span></div>";
-  if(s.avg_value_pkr) h+="<div class='liq'>Avg vol: "+fmtVal(s.avg_volume)+" sh | PKR "+fmtVal(s.avg_value_pkr)+"/day</div>";
-  h+="<div class='reason'>"+s.reason+"</div></div>";
-  return h;
-}
-
 function exhaustionCard(s){
   let h="<div class='card EXH'>";
   let catBadge = s.category === "CAT A" ? "<div class='badge CATA'>CAT A</div>" : "<div class='badge CATB'>CAT B</div>";
   h+="<div class='row1'><div><span class='sym'>"+s.symbol+"</span></div>"+catBadge+"</div>";
-  
   h+="<div class='meta'>";
   h+="<div>Yesterday Vol: <b>"+fmtVal(s.prev_vol)+"</b> | Today Vol: <b>"+fmtVal(s.today_vol)+"</b></div>";
   h+="<div>Context: Dropped <b>"+(s.drop_pct||"?")+"%</b> over <b>"+(s.drop_days||"?")+"</b> days.</div>";
   h+="</div>";
-
   h+="<div class='levels'>";
   h+="<div class='lvl buy'><div class='lbl'>Entry</div><div class='val'>"+s.entry+"</div></div>";
   h+="<div class='lvl'><div class='lbl'>Stop</div><div class='val'>"+s.stop+"</div></div>";
   h+="<div class='lvl'><div class='lbl'>Target</div><div class='val'>"+s.target+"</div></div>";
   h+="</div>";
-  
   h+="<div class='reason'>Exhaustion Bounce: Green today on drastically lower volume after a major downtrend.</div></div>";
   return h;
 }
-
-function renderWyckoff(q){
-  const c=document.getElementById("wyckoff-sections");
-  let h="";
-  for(const st of WYCKOFF_STAGES){
-    let rows=wyckoffData.filter(x=>x.stage===st.k);
-    if(q) rows=rows.filter(x=>x.symbol.includes(q));
-    const zero=rows.length===0;
-    const isOpen=!zero && (openW[st.k] || (q && rows.length>0));
-    h+="<div class='group'><div class='sec-btn "+st.k+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleW(\""+st.k+"\")'>";
-    h+="<div class='left'><span class='letter'>"+st.k+"</span><span class='count'>"+rows.length+"</span></div>";
-    h+="<span class='act'>"+st.label+"</span></div>";
-    if(isOpen){ for(const r of rows) h+=wyckoffCard(r); }
-    h+="</div>";
-  }
-  c.innerHTML=h;
-}
-
-function renderDaytrade(q){
-  const c=document.getElementById("daytrade-sections");
-  let h="";
-  for(const st of DAY_STAGES){
-    let rows=daytradeData.filter(x=>st.k==="BULL"?x.direction==="bullish":x.direction==="bearish");
-    if(q) rows=rows.filter(x=>x.symbol.includes(q));
-    const zero=rows.length===0;
-    const isOpen=!zero && (openD[st.k] || (q && rows.length>0));
-    h+="<div class='group'><div class='sec-btn "+st.k+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleD(\""+st.k+"\")'>";
-    h+="<div class='left'><span class='letter'>"+(st.k==="BULL"?"UP":"DN")+"</span><span class='count'>"+rows.length+"</span></div>";
-    h+="<span class='act'>"+st.label+"</span></div>";
-    if(isOpen){ for(const r of rows) h+=daytradeCard(r); }
-    h+="</div>";
-  }
-  c.innerHTML=h;
-}
-
 function renderExhaustion(q){
   const c=document.getElementById("exhaustion-sections");
   let h="";
-  const st = {k:"EXH", label:"LIVE 3PM SIGNALS"};
-  
   let rows = exhaustionData;
   if(q) rows = rows.filter(x=>x.symbol.includes(q));
-  
   const zero = rows.length === 0;
-  const isOpen = !zero && (openE["EXH"] || (q && rows.length > 0));
-  
-  h+="<div class='group'><div class='sec-btn EXH"+(isOpen?" open":"")+(zero?" zero":"")+"' onclick='toggleE(\"EXH\")'>";
+  h+="<div class='group'><div class='sec-btn EXH' onclick='renderAll()'>";
   h+="<div class='left'><span class='letter'>!</span><span class='count'>"+rows.length+"</span></div>";
-  h+="<span class='act'>"+st.label+"</span></div>";
-  
-  if(isOpen){ 
-      for(const r of rows) h+=exhaustionCard(r); 
-  } else if (!zero) {
-      h+="<div class='empty'>Click to expand signals</div>";
-  }
+  h+="<span class='act'>LIVE 3PM SIGNALS</span></div>";
+  if(!zero){ for(const r of rows) h+=exhaustionCard(r); }
   h+="</div>";
   c.innerHTML=h;
 }
-
-function toggleW(k){ openW[k]=!openW[k]; renderAll(); }
-function toggleD(k){ openD[k]=!openD[k]; renderAll(); }
-function toggleE(k){ openE[k]=!openE[k]; renderAll(); }
-
 function renderAll(){
   const q=document.getElementById("search").value.trim().toUpperCase();
-  renderWyckoff(q);
-  renderDaytrade(q);
   renderExhaustion(q);
 }
-
 async function load(){
-  const h={apikey:KEY,Authorization:"Bearer "+KEY};
-  const [r1,r2]=await Promise.all([
-    fetch(URL_BASE+"wyckoff_signals?select=*",{headers:h}),
-    fetch(URL_BASE+"daytrade_signals?select=*",{headers:h})
-  ]);
-  const d1=await r1.json();
-  const d2=await r2.json();
-  const order={C2:0,C1:1,D:2,B:3,A:4,E:5};
-  d1.sort((a,b)=>order[a.stage]-order[b.stage]);
-  wyckoffData=d1; daytradeData=d2;
-  
-  try {
-      const r3 = await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json?t=' + new Date().getTime());
-      if(r3.ok) {
-          const liveData = await r3.json();
-          if (Array.isArray(liveData)) {
-              exhaustionData = liveData;
-          }
-      }
-  } catch(e) {
-      console.log("No live_scan.json found.");
-  }
-  
-  document.getElementById("date").textContent="Run: "+(d1[0]?d1[0].run_date:"no data")+" | Wyckoff: "+d1.length+" | Day: "+d2.length+" | Live: "+exhaustionData.length;
+  try{
+    const r3=await fetch('https://raw.githubusercontent.com/Tariqkhattak79/psx-wyckoff/main/live_scan.json?t='+new Date().getTime());
+    if(r3.ok){ const liveData=await r3.json(); if(Array.isArray(liveData)){ exhaustionData=liveData; } }
+  }catch(e){ console.log("No data"); }
+  document.getElementById("date").textContent="Live: "+exhaustionData.length;
   renderAll();
   document.getElementById("search").addEventListener("input",renderAll);
 }
