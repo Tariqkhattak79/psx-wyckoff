@@ -8,8 +8,7 @@ LOOKBACK_DAYS = 60
 
 def run_scan():
     results = []
-    if not os.path.exists(DATA_FOLDER):
-        return
+    if not os.path.exists(DATA_FOLDER): return
     files = [f for f in os.listdir(DATA_FOLDER) if f.endswith('.csv')]
     
     for i, filename in enumerate(files):
@@ -18,7 +17,7 @@ def run_scan():
         try:
             df = pd.read_csv(path)
             df = df.sort_values("date").reset_index(drop=True)
-            if len(df) < 10: continue
+            if len(df) < 20: continue
             
             today = df.iloc[-1]
             yesterday = df.iloc[-2]
@@ -34,10 +33,18 @@ def run_scan():
             is_downtrend = drop_pct >= MIN_DROP_PCT
             days_since_high = len(df) - 1 - high_idx
 
+            avg_vol20 = df['volume'].tail(20).mean()
+            
+            # LOOSENED CAT A RULES:
+            # Yesterday > 1.2x avg AND today < 60% of yesterday
+            is_cat_a = (yesterday['volume'] > (avg_vol20 * 1.2)) and (today['volume'] < (yesterday['volume'] * 0.6))
+            
             if prev_is_red and is_green and low_vol and is_downtrend:
                 entry = round(today['close'], 2)
                 stop = round(yesterday['low'] * 0.99, 2)
                 target = round(entry + ((entry - stop) * 2), 2)
+                
+                category = "CAT A" if is_cat_a else "CAT B"
                 
                 results.append({
                     "symbol": sym,
@@ -47,15 +54,14 @@ def run_scan():
                     "today_vol": int(today['volume']),
                     "prev_vol": int(yesterday['volume']),
                     "drop_pct": round(drop_pct, 1),
-                    "drop_days": int(days_since_high)
+                    "drop_days": int(days_since_high),
+                    "category": category
                 })
+                print(f"[{category}] SIGNAL: {sym} (Drop {drop_pct:.1f}%)")
         except Exception: pass
 
-    if os.path.exists("live_scan.json"):
-        os.remove("live_scan.json")
-    with open("live_scan.json", "w") as f:
-        json.dump(results, f, indent=4)
+    if os.path.exists("live_scan.json"): os.remove("live_scan.json")
+    with open("live_scan.json", "w") as f: json.dump(results, f, indent=4)
     print(f"Found {len(results)} signals.")
 
-if __name__ == "__main__":
-    run_scan()
+if __name__ == "__main__": run_scan()

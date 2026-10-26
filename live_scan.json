@@ -7,7 +7,8 @@
         "today_vol": 2684,
         "prev_vol": 18774,
         "drop_pct": 8.2,
-        "drop_days": 51
+        "drop_days": 51,
+        "category": "CAT B"
     },
     {
         "symbol": "AICL",
@@ -17,7 +18,8 @@
         "today_vol": 720587,
         "prev_vol": 2376983,
         "drop_pct": 11.7,
-        "drop_days": 35
+        "drop_days": 35,
+        "category": "CAT A"
     },
     {
         "symbol": "ASC",
@@ -27,7 +29,8 @@
         "today_vol": 178625,
         "prev_vol": 838568,
         "drop_pct": 48.6,
-        "drop_days": 57
+        "drop_days": 57,
+        "category": "CAT B"
     },
     {
         "symbol": "BAHL",
@@ -37,7 +40,8 @@
         "today_vol": 90367,
         "prev_vol": 163116,
         "drop_pct": 18.4,
-        "drop_days": 53
+        "drop_days": 53,
+        "category": "CAT B"
     },
     {
         "symbol": "COLG",
@@ -47,7 +51,8 @@
         "today_vol": 6558,
         "prev_vol": 24711,
         "drop_pct": 12.5,
-        "drop_days": 58
+        "drop_days": 58,
+        "category": "CAT A"
     },
     {
         "symbol": "ENGROH",
@@ -57,7 +62,8 @@
         "today_vol": 356360,
         "prev_vol": 599156,
         "drop_pct": 13.9,
-        "drop_days": 55
+        "drop_days": 55,
+        "category": "CAT B"
     },
     {
         "symbol": "FCL",
@@ -67,7 +73,8 @@
         "today_vol": 378109,
         "prev_vol": 651108,
         "drop_pct": 21.4,
-        "drop_days": 47
+        "drop_days": 47,
+        "category": "CAT B"
     },
     {
         "symbol": "HUBC",
@@ -77,7 +84,8 @@
         "today_vol": 1956326,
         "prev_vol": 2905183,
         "drop_pct": 18.0,
-        "drop_days": 53
+        "drop_days": 53,
+        "category": "CAT B"
     },
     {
         "symbol": "IMAGE",
@@ -87,7 +95,8 @@
         "today_vol": 127851,
         "prev_vol": 520025,
         "drop_pct": 15.0,
-        "drop_days": 59
+        "drop_days": 59,
+        "category": "CAT A"
     },
     {
         "symbol": "IREIT",
@@ -97,7 +106,8 @@
         "today_vol": 130338,
         "prev_vol": 217320,
         "drop_pct": 16.7,
-        "drop_days": 35
+        "drop_days": 35,
+        "category": "CAT A"
     },
     {
         "symbol": "ISL",
@@ -107,7 +117,8 @@
         "today_vol": 88871,
         "prev_vol": 160930,
         "drop_pct": 23.8,
-        "drop_days": 47
+        "drop_days": 47,
+        "category": "CAT B"
     },
     {
         "symbol": "JVDC",
@@ -117,7 +128,8 @@
         "today_vol": 116657,
         "prev_vol": 184785,
         "drop_pct": 19.2,
-        "drop_days": 55
+        "drop_days": 55,
+        "category": "CAT B"
     },
     {
         "symbol": "KTML",
@@ -127,7 +139,8 @@
         "today_vol": 24277,
         "prev_vol": 683508,
         "drop_pct": 17.9,
-        "drop_days": 58
+        "drop_days": 58,
+        "category": "CAT A"
     },
     {
         "symbol": "MLCF",
@@ -137,7 +150,8 @@
         "today_vol": 3247331,
         "prev_vol": 5818076,
         "drop_pct": 18.9,
-        "drop_days": 42
+        "drop_days": 42,
+        "category": "CAT A"
     },
     {
         "symbol": "MTL",
@@ -147,7 +161,8 @@
         "today_vol": 81334,
         "prev_vol": 201650,
         "drop_pct": 13.5,
-        "drop_days": 28
+        "drop_days": 28,
+        "category": "CAT A"
     },
     {
         "symbol": "MUREB",
@@ -157,7 +172,8 @@
         "today_vol": 490,
         "prev_vol": 717,
         "drop_pct": 9.0,
-        "drop_days": 19
+        "drop_days": 19,
+        "category": "CAT B"
     },
     {
         "symbol": "NATF",
@@ -167,7 +183,8 @@
         "today_vol": 41818,
         "prev_vol": 49035,
         "drop_pct": 23.2,
-        "drop_days": 54
+        "drop_days": 54,
+        "category": "CAT B"
     },
     {
         "symbol": "NBP",
@@ -177,7 +194,8 @@
         "today_vol": 1474103,
         "prev_vol": 3139183,
         "drop_pct": 29.0,
-        "drop_days": 48
+        "drop_days": 48,
+        "category": "CAT A"
     },
     {
         "symbol": "NCPL",
@@ -187,7 +205,8 @@
         "today_vol": 1645267,
         "prev_vol": 1651024,
         "drop_pct": 26.6,
-        "drop_days": 54
+        "drop_days": 54,
+        "category": "CAT B"
     },
     {
         "symbol": "NML",
@@ -197,7 +216,8 @@
         "today_vol": 607100,
         "prev_vol": 2001192,
         "drop_pct": 24.9,
-        "drop_days": 54
+        "drop_days": 54,
+        "category": "CAT A"
     },
     {
         "symbol": "NRL",
@@ -207,7 +227,8 @@
         "today_vol": 933271,
         "prev_vol": 1730125,
         "drop_pct": 19.7,
-        "drop_days": 5
+        "drop_days": 5,
+        "category": "CAT B"
     },
     {
         "symbol": "PAEL",
@@ -217,7 +238,8 @@
         "today_vol": 1388245,
         "prev_vol": 2075888,
         "drop_pct": 28.6,
-        "drop_days": 54
+        "drop_days": 54,
+        "category": "CAT B"
     },
     {
         "symbol": "PIOC",
@@ -227,7 +249,8 @@
         "today_vol": 35099,
         "prev_vol": 97481,
         "drop_pct": 20.9,
-        "drop_days": 53
+        "drop_days": 53,
+        "category": "CAT A"
     },
     {
         "symbol": "PSX",
@@ -237,7 +260,8 @@
         "today_vol": 834904,
         "prev_vol": 1068834,
         "drop_pct": 27.8,
-        "drop_days": 50
+        "drop_days": 50,
+        "category": "CAT B"
     },
     {
         "symbol": "SITC",
@@ -247,7 +271,8 @@
         "today_vol": 456,
         "prev_vol": 1443,
         "drop_pct": 29.0,
-        "drop_days": 59
+        "drop_days": 59,
+        "category": "CAT B"
     },
     {
         "symbol": "SYM",
@@ -257,7 +282,8 @@
         "today_vol": 285663,
         "prev_vol": 534594,
         "drop_pct": 15.6,
-        "drop_days": 25
+        "drop_days": 25,
+        "category": "CAT A"
     },
     {
         "symbol": "TBL",
@@ -267,7 +293,8 @@
         "today_vol": 530625,
         "prev_vol": 645597,
         "drop_pct": 18.1,
-        "drop_days": 51
+        "drop_days": 51,
+        "category": "CAT B"
     },
     {
         "symbol": "UPFL",
@@ -277,6 +304,7 @@
         "today_vol": 96,
         "prev_vol": 333,
         "drop_pct": 14.6,
-        "drop_days": 2
+        "drop_days": 2,
+        "category": "CAT A"
     }
 ]
