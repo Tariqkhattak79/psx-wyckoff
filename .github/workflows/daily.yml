@@ -1,8 +1,8 @@
-name: Daily Wyckoff Run
+﻿name: Daily Master Run
 
 on:
   schedule:
-    - cron: "30 12 * * 1-5"
+    - cron: "30 12 * * 1-5" # 5:30 PM PKT
   workflow_dispatch:
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install deps
-        run: pip install psxdata pandas requests python-dotenv resend
+        run: pip install pypsx-toolkit pandas requests python-dotenv resend
 
       - name: Fetch data
         run: python fetch_data.py
@@ -31,6 +31,9 @@ jobs:
 
       - name: Day trade setups
         run: python daytrade.py
+
+      - name: Run Exhaustion Scanner
+        run: python live_scanner.py
 
       - name: Push Wyckoff to Supabase
         env:
@@ -49,6 +52,11 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
         run: python send_email.py
-      
-      - name: Run Exhaustion Scanner
-        run: python live_3pm_scan.py
+
+      - name: Commit and Push updated JSONs
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add signals.json daytrade.json live_scan.json
+          git commit -m "Updated all scan results [skip ci]" || echo "No changes to commit"
+          git push
