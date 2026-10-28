@@ -11,6 +11,17 @@
         "category": "CAT A"
     },
     {
+        "symbol": "COLG",
+        "entry": 1109.76,
+        "stop": 1086.03,
+        "target": 1157.22,
+        "today_vol": 6558,
+        "prev_vol": 24711,
+        "drop_pct": 12.5,
+        "drop_days": 58,
+        "category": "CAT A"
+    },
+    {
         "symbol": "MUREB",
         "entry": 925.45,
         "stop": 892.24,
@@ -19,6 +30,17 @@
         "prev_vol": 717,
         "drop_pct": 9.0,
         "drop_days": 19,
+        "category": "CAT B"
+    },
+    {
+        "symbol": "ABL",
+        "entry": 168.75,
+        "stop": 165.41,
+        "target": 175.43,
+        "today_vol": 2684,
+        "prev_vol": 18774,
+        "drop_pct": 8.2,
+        "drop_days": 51,
         "category": "CAT B"
     }
 ]
